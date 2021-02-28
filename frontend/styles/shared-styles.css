@@ -1,12 +1,11 @@
-/*
-   CSS styling examples for the Vaadin app.
-   Visit https://vaadin.com/docs/flow/theme/theming-overview.html and
-   https://vaadin.com/themes/lumo for more information.
+/*html {
+  --vaadin-text-field-default-width: 5em;
+}
 */
-
-/* Example: CSS class name to center align the content . */
-.centered-content {
-  margin: 0 auto;
-  max-width: 250px;
+/* center pyramid and pyramid rows vertically */
+.app-layout .mathpyramid-layout, .app-layout .mathpyramid-layout .row {
+    margin: 0 auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 

@@ -3,9 +3,29 @@
    Visit https://vaadin.com/docs/flow/theme/theming-overview.html and
    https://vaadin.com/themes/lumo for more information.
 */
-
-/* Example: the style is applied only to the textfields which has the `bordered` theme attribute. */
-:host([theme~="bordered"]) [part="input-field"] {
-    box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
-    background-color: var(--lumo-base-color);
+[part="input-field"] {
+    border: 1px solid grey;
+	margin: 5px;
+	color: grey;
+	font-weight: bold;
+	width: 5em;
+	background-color: white;
+	height: 2.5em;
+	border-radius: 0;
+	font-family: "AvenirNextLTW02-Regular", sans-serif;
+	font-size: 16px;
+}
+/* remove dashed border */
+[part="input-field"]::after {
+    border-color: transparent !important;
+}
+/* center numbers in field */
+[part="value"] {
+    text-align: center;
+}
+/* darker background color for readonly fields */
+:host([readonly]) [part="input-field"] {
+    color: grey;
+    cursor: default;
+    background-color: lightgrey;
 }

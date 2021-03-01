@@ -15,6 +15,7 @@
 	font-family: "AvenirNextLTW02-Regular", sans-serif;
 	font-size: 16px;
 }
+
 /* remove dashed border */
 [part="input-field"]::after {
     border-color: transparent !important;
@@ -28,4 +29,12 @@
     color: grey;
     cursor: default;
     background-color: lightgrey;
+}
+/* green for solved fields */
+:host(.correct) [part="input-field"] {
+    background-color: lightgreen;
+}
+/* pink for incorrect fields */
+:host(.incorrect) [part="input-field"] {
+    background-color: lightpink;
 }

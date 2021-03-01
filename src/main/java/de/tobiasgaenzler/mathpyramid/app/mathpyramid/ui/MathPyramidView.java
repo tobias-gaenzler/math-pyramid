@@ -1,6 +1,8 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
 
+import com.google.common.base.Strings;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -25,7 +27,7 @@ public class MathPyramidView extends VerticalLayout {
 
     public MathPyramidView() {
         addClassName("app-layout");
-        this.mathPyramid = new MathPyramid(3,100);
+        this.mathPyramid = new MathPyramid(3, 100);
         model = new MathPyramidModel(mathPyramid);
         layout = new MathPyramidLayout(model.getSize());
         add(layout);
@@ -51,16 +53,33 @@ public class MathPyramidView extends VerticalLayout {
     }
 
     private void addValueChangeListener(final int currentRow, final int currentColumn, TextField textField) {
-        if (valueChangeListeners.get(textField) != null) {
-            // store user input in model
+        if (valueChangeListeners.get(textField) == null) {
             Registration registration = textField.addValueChangeListener(event -> {
                 // store user input in model
                 model.setUserInput(currentRow, currentColumn, textField.getValue());
-//                presenter.handleUserInput(currentRow, currentColumn);
-//                updateField(currentRow, currentColumn, textField);
+                if (model.isSolved()) {
+                    showSuccessNotification();
+                }
+                updateField(currentRow, currentColumn, textField);
 
             });
             valueChangeListeners.put(textField, registration);
         }
+    }
+
+    public void updateField(final int currentRow, final int currentColumn, TextField textField) {
+        textField.removeClassNames("correct", "incorrect");
+        String input = Strings.nullToEmpty(textField.getValue()).trim();
+        if (model.isUserInputCorrect(currentRow, currentColumn)) {
+            textField.addClassName("correct");
+            textField.setReadOnly(true);
+        } else if (!Strings.isNullOrEmpty(input)) {
+            textField.addClassName("incorrect");
+        }
+    }
+
+    private void showSuccessNotification() {
+        Notification notification = new Notification();
+        Notification.show("Pyramide gelöst! Herzlichen Glückwunsch!", 2000, Notification.Position.MIDDLE);
     }
 }

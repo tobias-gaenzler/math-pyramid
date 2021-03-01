@@ -79,7 +79,6 @@ public class MathPyramidView extends VerticalLayout {
     }
 
     private void showSuccessNotification() {
-        Notification notification = new Notification();
         Notification.show("Pyramide gelöst! Herzlichen Glückwunsch!", 2000, Notification.Position.MIDDLE);
     }
 }

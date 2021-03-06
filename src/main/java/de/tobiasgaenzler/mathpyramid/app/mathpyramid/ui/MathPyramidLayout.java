@@ -6,23 +6,21 @@ import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class MathPyramidLayout extends VerticalLayout {
 
+    public static final String MATHPYRAMID_LAYOUT_ID = "mathpyramid-layout";
+    public static final String MATHPYRAMID_LAYOUT_CSS_CLASS = "mathpyramid-layout";
     private final List<TextField> pyramidBlocks = new ArrayList<>();
-    private int size = 0;
+    private final int size;
 
     public MathPyramidLayout(int size) {
         super();
-        setId("mathpyramid-layout");
-        addClassNames("mathpyramid-layout");
-        setSizeUndefined();
-        setSize(size);
-
-    }
-
-    private void setSize(int size) {
+        // styling
+        setId(MATHPYRAMID_LAYOUT_ID);
+        addClassNames(MATHPYRAMID_LAYOUT_CSS_CLASS);
+        setSizeUndefined(); // center
+        // create layout
         this.size = size;
         refresh();
     }
@@ -35,22 +33,23 @@ public class MathPyramidLayout extends VerticalLayout {
         pyramidBlocks.clear();
         removeAll();
 
-        // create blocks from bottom left
-        IntStream.iterate(size - 1, i -> i - 1)//
-                .limit(size)//
-                .forEach(i -> addComponentAsFirst(createRow(i)));
+        // create blocks row by row, from bottom to top, left to right
+        for (int rowId = size - 1; rowId >= 0; rowId = rowId - 1) {
+            addComponentAsFirst(createRowLayout(rowId));
+        }
     }
 
-    private HorizontalLayout createRow(Integer rowId) {
-        HorizontalLayout row = new HorizontalLayout();
-        IntStream.iterate(rowId + 1, colId -> colId - 1)//
-                .limit(rowId + 1)//
-                .forEach(colId -> row.addComponentAsFirst(createBlock()));
-        row.addClassName("row");
-        return row;
+    private HorizontalLayout createRowLayout(Integer rowId) {
+        HorizontalLayout rowLayout = new HorizontalLayout();
+        // add rowId + 1 fields (e.g. one field for row 0, two fields for row 1)
+        for (int colId = 0; colId < rowId + 1; colId++) {
+            rowLayout.addComponentAsFirst(createTextField());
+        }
+        rowLayout.addClassName("row");
+        return rowLayout;
     }
 
-    private TextField createBlock() {
+    private TextField createTextField() {
         TextField textField = new TextField();
         pyramidBlocks.add(textField);
         return textField;

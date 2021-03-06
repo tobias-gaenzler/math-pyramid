@@ -1,14 +1,11 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.application;
 
-import org.apache.commons.compress.utils.Lists;
 import org.ejml.factory.SingularMatrixException;
 import org.ejml.simple.SimpleMatrix;
-import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -16,19 +13,15 @@ import java.util.stream.IntStream;
 
 public class MathPyramid {
 
-	private final Integer size;
-	private final Integer maxValue;
-	private List<Integer> startValues = new ArrayList<>();
+	private final Integer size; // number or rows, higher number increases difficulty
+	private final Integer maxValue; // maximum number in any block, higher numbers increase difficulty
+	private List<Integer> startValues = new ArrayList<>(); // numbers which are visible from the start
 	private List<Integer> solution =  new ArrayList<>();
 
 	public MathPyramid(Integer size, Integer maxValue) {
 		this.size = size;
 		this.maxValue = maxValue;
 		create();
-	}
-
-	public List<Integer> getStartValues() {
-		return startValues;
 	}
 
 	public int getSize() {
@@ -63,6 +56,13 @@ public class MathPyramid {
 
 	public String getSolutionAt(Integer rowId, Integer colId) {
 		return solution.get(getIndex(rowId, colId)).toString();
+	}
+
+	public boolean isPrefilledBlock(int row, int column) {
+		if (row < size && column < size - row) {
+			return startValues.get(getIndex(row, column)) != null;
+		}
+		return false;
 	}
 
 	private void create() {
@@ -158,27 +158,4 @@ public class MathPyramid {
 	private int getNumberOfBlocks(int size) {
 		return (size * size + size) / 2;
 	}
-
-	/**
-	 * 
-	 * @return the solution values of input fields, i.e. the values which need to be entered into input fields to solve
-	 *         the pyramid
-	 */
-	public List<Integer> getSolutionValues() {
-		List<Integer> solutions = Lists.newArrayList();
-		for (int i = 0; i < solution.size(); i++) {
-			if (startValues.get(i) == null) {
-				solutions.add(solution.get(i));
-			}
-		}
-		return solutions;
-	}
-
-	public boolean isStartBlock(int row, int column) {
-		if (row < size && column < size - row) {
-			return startValues.get(getIndex(row, column)) != null;
-		}
-		return false;
-	}
-
 }

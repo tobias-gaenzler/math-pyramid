@@ -6,29 +6,23 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramid;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@Route
+@Route("") // map this view to "/"
 @Theme(value = Lumo.class)
+// Global styles apply only to elements which are not located in shadow dom
 @CssImport("./styles/shared-styles.css")
+// Local styles for text fields (can style parts, ...)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class MathPyramidView extends VerticalLayout {
 
-    private final MathPyramid mathPyramid;
     private final MathPyramidLayout layout;
     private final MathPyramidModel model;
-    private Map<TextField, Registration> valueChangeListeners = new HashMap<>();
 
     public MathPyramidView() {
         addClassName("app-layout");
-        this.mathPyramid = new MathPyramid(3, 100);
-        model = new MathPyramidModel(mathPyramid);
+        model = new MathPyramidModel();
         layout = new MathPyramidLayout(model.getSize());
         add(layout);
         bind();
@@ -37,37 +31,36 @@ public class MathPyramidView extends VerticalLayout {
     public void bind() {
         int size = model.getSize();
         for (int row = 0; row < size; row++) {
-            final int currentRow = row;
             for (int column = 0; column < size - row; column++) {
-                final int currentColumn = column;
-                TextField textField = layout.getPyramidBlocks().get(model.getIndex(row, column));
-                if (!model.isUserInput(row, column)) {
-                    textField.setValue(model.getSolution(row, column));
-                    textField.setReadOnly(true);
-                } else {
-                    addValueChangeListener(currentRow, currentColumn, textField);
-                }
+                createPyramidBlock(row, column);
             }
         }
+    }
 
+    private void createPyramidBlock(int row, int column) {
+        int fieldIndex = model.getIndex(row, column);
+        TextField textField = layout.getPyramidBlocks().get(fieldIndex);
+        if (model.isUserInput(row, column)) {
+            addValueChangeListener(row, column, textField);
+        } else {
+            textField.setValue(model.getSolution(row, column));
+            textField.setReadOnly(true);
+        }
     }
 
     private void addValueChangeListener(final int currentRow, final int currentColumn, TextField textField) {
-        if (valueChangeListeners.get(textField) == null) {
-            Registration registration = textField.addValueChangeListener(event -> {
-                // store user input in model
-                model.setUserInput(currentRow, currentColumn, textField.getValue());
-                if (model.isSolved()) {
-                    showSuccessNotification();
-                }
-                updateField(currentRow, currentColumn, textField);
+        textField.addValueChangeListener(event -> {
+            // store user input in model
+            model.setUserInput(currentRow, currentColumn, textField.getValue());
+            updatePyramidBlock(currentRow, currentColumn, textField);
+            if (model.isSolved()) {
+                showSuccessNotification();
+            }
 
-            });
-            valueChangeListeners.put(textField, registration);
-        }
+        });
     }
 
-    public void updateField(final int currentRow, final int currentColumn, TextField textField) {
+    public void updatePyramidBlock(final int currentRow, final int currentColumn, TextField textField) {
         textField.removeClassNames("correct", "incorrect");
         String input = Strings.nullToEmpty(textField.getValue()).trim();
         if (model.isUserInputCorrect(currentRow, currentColumn)) {
@@ -79,6 +72,6 @@ public class MathPyramidView extends VerticalLayout {
     }
 
     private void showSuccessNotification() {
-        Notification.show("Pyramide gelöst! Herzlichen Glückwunsch!", 2000, Notification.Position.MIDDLE);
+        Notification.show("Solved! Congratulations!", 2000, Notification.Position.MIDDLE);
     }
 }

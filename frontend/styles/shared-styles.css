@@ -1,7 +1,3 @@
-/*html {
-  --vaadin-text-field-default-width: 5em;
-}
-*/
 /* center pyramid and pyramid rows vertically */
 .app-layout .mathpyramid-layout, .app-layout .mathpyramid-layout .row {
     margin: 0 auto;

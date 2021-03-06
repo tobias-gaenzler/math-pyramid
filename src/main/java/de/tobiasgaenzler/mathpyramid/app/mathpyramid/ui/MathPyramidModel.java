@@ -5,15 +5,13 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramid;
 
-import java.util.List;
-
 public class MathPyramidModel {
 
-    private MathPyramid mathPyramid;
+    private final MathPyramid mathPyramid;
     private final Table<Integer, Integer, String> userInput = HashBasedTable.create();
 
-    public MathPyramidModel(MathPyramid mathPyramid) {
-        this.mathPyramid = mathPyramid;
+    public MathPyramidModel() {
+        this.mathPyramid = new MathPyramid(3, 100);
         // initialize user input
         for (int row = 0; row < mathPyramid.getSize(); row++) {
             for (int column = 0; column < mathPyramid.getSize(); column++) {
@@ -22,10 +20,6 @@ public class MathPyramidModel {
                 }
             }
         }
-    }
-
-    public List<Integer> getStartValues() {
-        return mathPyramid.getStartValues();
     }
 
     public int getSize() {
@@ -48,13 +42,12 @@ public class MathPyramidModel {
     }
 
     public boolean isUserInput(int row, int column) {
-        return !mathPyramid.isStartBlock(row, column);
+        return !mathPyramid.isPrefilledBlock(row, column);
     }
 
     public String getSolution(int row, int column) {
         return mathPyramid.getSolutionAt(row, column);
     }
-
 
     public String getUserInput(int row, int column) {
         return userInput.get(row, column);

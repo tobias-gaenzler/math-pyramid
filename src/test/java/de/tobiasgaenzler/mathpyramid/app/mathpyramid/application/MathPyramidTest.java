@@ -77,4 +77,12 @@ public class MathPyramidTest {
         MathPyramid mathPyramid = new MathPyramid(3, 10000);
         assertThat(mathPyramid.getIndex(row, col)).isEqualTo(index);
     }
+
+    @ParameterizedTest
+    @CsvSource({"-10,0", "0,-1", "4,1", "1,5"})
+    public void testGetIndexThrowsExceptionOnInvalidValues(int row, int col) {
+        MathPyramid mathPyramid = new MathPyramid(3, 10000);
+        assertThatThrownBy(() -> mathPyramid.getIndex(row, col))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

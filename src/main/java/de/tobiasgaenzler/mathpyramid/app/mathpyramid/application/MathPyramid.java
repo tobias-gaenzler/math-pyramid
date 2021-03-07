@@ -54,12 +54,12 @@ public class MathPyramid {
         // 1 1 -> 4
 
         // 2 0 -> 5
-        if (rowId >= size) {
-            String message = MessageFormat.format("rowId {0} must be smaller than the size of the pyramid {1}", rowId, size);
+        if (rowId < 0 || rowId >= size) {
+            String message = MessageFormat.format("rowId {0} must be non-negative and smaller than the size of the pyramid {1}", rowId, size);
             throw new IllegalArgumentException(message);
         }
-        if (colId >= size - rowId) {
-            String message = MessageFormat.format("colId {0} must be smaller than the size of the pyramid minus rowId {1}, size {2}", colId, rowId, size);
+        if (colId < 0 || colId >= size - rowId) {
+            String message = MessageFormat.format("colId {0} must be non-negative and smaller than the size of the pyramid minus rowId {1}, size {2}", colId, rowId, size);
             throw new IllegalArgumentException(message);
         }
 

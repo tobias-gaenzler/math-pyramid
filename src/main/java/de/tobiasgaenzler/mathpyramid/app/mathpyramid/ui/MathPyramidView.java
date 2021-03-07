@@ -5,6 +5,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -15,13 +16,19 @@ import com.vaadin.flow.theme.lumo.Lumo;
 @CssImport("./styles/shared-styles.css")
 // Local styles for text fields (can style parts, ...)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
+@PreserveOnRefresh
 public class MathPyramidView extends VerticalLayout {
 
-    private final MathPyramidLayout layout;
-    private final MathPyramidModel model;
+    private MathPyramidLayout layout;
+    private MathPyramidModel model;
 
     public MathPyramidView() {
         addClassName("app-layout");
+        refresh();
+    }
+
+    private void refresh() {
+        removeAll();
         model = new MathPyramidModel();
         layout = new MathPyramidLayout(model.getSize());
         add(layout);
@@ -54,9 +61,9 @@ public class MathPyramidView extends VerticalLayout {
             model.setUserInput(currentRow, currentColumn, textField.getValue());
             updatePyramidBlock(currentRow, currentColumn, textField);
             if (model.isSolved()) {
-                showSuccessNotification();
+                Notification notification = Notification.show("Solved! Congratulations!", 2000, Notification.Position.MIDDLE);
+                notification.addDetachListener(detachEvent -> refresh());
             }
-
         });
     }
 
@@ -69,9 +76,5 @@ public class MathPyramidView extends VerticalLayout {
         } else if (!Strings.isNullOrEmpty(input)) {
             textField.addClassName("incorrect");
         }
-    }
-
-    private void showSuccessNotification() {
-        Notification.show("Solved! Congratulations!", 2000, Notification.Position.MIDDLE);
     }
 }

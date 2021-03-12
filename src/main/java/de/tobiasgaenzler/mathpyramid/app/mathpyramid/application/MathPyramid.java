@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 /**
  * Creates a 'MathPyramid' consisting of blocks which contain integer numbers where
  * the sum of two adjacent blocks equals the value in the block above these two blocks.
- * 'size': number of rows must be between three and 5 (size two is too simple, above size 5 is too expensive
+ * 'size': number of rows must be between three and 5 (size two is too simple, above size 5 is too expensive)
  * 'maxValue': maximal integer value in one of the pyramid blocks
  */
 public class MathPyramid {
@@ -29,9 +29,9 @@ public class MathPyramid {
                     "Size must be between 3 and 5", size);
             throw new IllegalArgumentException(message);
         }
-        if (maxValue < 10) {
+        if (maxValue < 5) {
             String message = MessageFormat.format("Illegal maxValue {0} for pyramid. " +
-                    "MaxValue must be 10 or higher.", maxValue);
+                    "MaxValue must be 5 or higher.", maxValue);
             throw new IllegalArgumentException(message);
         }
         this.size = size;

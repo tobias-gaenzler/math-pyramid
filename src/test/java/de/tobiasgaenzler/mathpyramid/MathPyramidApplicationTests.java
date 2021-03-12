@@ -2,12 +2,12 @@ package de.tobiasgaenzler.mathpyramid;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 
 @SpringBootTest
-class MathPyramidApplicationTests {
+public class MathPyramidApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+    }
 }

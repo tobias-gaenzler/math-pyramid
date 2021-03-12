@@ -19,6 +19,7 @@
 	<properties>
 		<java.version>15</java.version>
 		<vaadin.version>14.4.8</vaadin.version>
+		<selenium-jupiter.version>3.4.0</selenium-jupiter.version>
 	</properties>
 
 	<dependencyManagement>
@@ -102,14 +103,14 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>io.github.bonigarcia</groupId>
-			<artifactId>webdrivermanager</artifactId>
-			<version>3.8.1</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>selenium-jupiter</artifactId>
+			<version>${selenium-jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

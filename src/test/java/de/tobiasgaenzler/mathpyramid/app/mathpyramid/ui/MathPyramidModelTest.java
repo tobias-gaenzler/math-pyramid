@@ -17,7 +17,7 @@ class MathPyramidModelTest {
 
     @ParameterizedTest
     @CsvSource({"0,0", "0,1", "0,2", "1,0", "1,1", "2,0"})
-    public void testIsUserInputCorrectReturnsFalseForInitialModel(int row, int column) {
+    public void testIsUserInputCorrectReturnsFalseBeforeUserInput(int row, int column) {
         MathPyramidModel model = new MathPyramidModel();
         assertThat(model.isUserInputCorrect(row, column)).isEqualTo(false);
     }

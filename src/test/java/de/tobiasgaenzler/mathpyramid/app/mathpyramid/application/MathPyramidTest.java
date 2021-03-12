@@ -29,7 +29,7 @@ public class MathPyramidTest {
 
 
     @ParameterizedTest
-    @CsvSource({"3,10", "4,100", "5,10000", "5," + Integer.MAX_VALUE})
+    @CsvSource({"3,5", "4,100", "5,10000", "5," + Integer.MAX_VALUE})
     public void testMathPyramidCreatesPyramidWithValuesLowerOrEqualThanMaxValue(int size, int maxValue) {
         MathPyramid mathPyramid = new MathPyramid(size, maxValue);
         assertThat(mathPyramid.getSolution().stream()
@@ -46,11 +46,11 @@ public class MathPyramidTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {Integer.MIN_VALUE, -1, 0, 1, 2, 9})
-    public void testIllegalMaxValuesSmallerThan10(int maxValue) {
+    @ValueSource(ints = {Integer.MIN_VALUE, -1, 0, 1, 2, 4})
+    public void testIllegalMaxValuesSmallerThan5(int maxValue) {
         assertThatThrownBy(() -> new MathPyramid(3, maxValue))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("10 or higher");
+                .hasMessageContaining("5 or higher");
     }
 
     @Test

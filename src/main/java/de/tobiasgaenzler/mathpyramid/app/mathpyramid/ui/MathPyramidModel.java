@@ -9,11 +9,12 @@ import java.text.MessageFormat;
 
 public class MathPyramidModel {
 
+    private static final Integer DEFAULT_MAX_VALUE = 100;
     private final MathPyramid mathPyramid;
     private final Table<Integer, Integer, String> userInput = HashBasedTable.create();
 
-    public MathPyramidModel() {
-        mathPyramid = new MathPyramid(3, 100);
+    public MathPyramidModel(Integer maxValue) {
+        mathPyramid = new MathPyramid(3, maxValue);
         // initialize user input
         for (int row = 0; row < mathPyramid.getSize(); row++) {
             for (int column = 0; column < mathPyramid.getSize() - row; column++) {
@@ -22,6 +23,10 @@ public class MathPyramidModel {
                 }
             }
         }
+    }
+
+    public MathPyramidModel() {
+        this(DEFAULT_MAX_VALUE);
     }
 
     public boolean isSolved() {

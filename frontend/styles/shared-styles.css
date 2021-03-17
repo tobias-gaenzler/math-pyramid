@@ -1,3 +1,13 @@
+.header {
+    padding: 0 var(--lumo-space-m);
+}
+
+.header h1.logo {
+    font-size: 1em;
+    margin: var(--lumo-space-m);
+}
+
+
 /* center pyramid and pyramid rows vertically */
 .app-layout .mathpyramid-layout, .app-layout .mathpyramid-layout .row {
     margin: 0 auto;

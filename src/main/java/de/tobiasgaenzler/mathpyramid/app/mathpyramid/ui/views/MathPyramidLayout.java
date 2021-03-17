@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

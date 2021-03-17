@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.google.common.base.Strings;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -7,16 +7,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.UIScope;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-@Route("") // map this view to "/"
-@Theme(value = Lumo.class)
-// Global styles apply only to elements which are not located in shadow dom
-@CssImport("./styles/shared-styles.css")
+@Component
+@Scope("prototype")
+@Route(value = "", layout = MainLayout.class) // use this view as default view ("/"), set this as content in MainLayout
 // Local styles for text fields (can style parts, ...)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @PageTitle("Math-Pyramid")

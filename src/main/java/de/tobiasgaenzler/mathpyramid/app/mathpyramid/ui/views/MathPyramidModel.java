@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashBasedTable;

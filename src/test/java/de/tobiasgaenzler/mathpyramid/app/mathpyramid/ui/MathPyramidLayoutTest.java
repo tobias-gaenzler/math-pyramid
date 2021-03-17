@@ -1,6 +1,7 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
 
 import com.vaadin.flow.component.HasOrderedComponents;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.MathPyramidLayout;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

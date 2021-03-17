@@ -5,6 +5,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -29,7 +30,8 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Math Pyramid");
         logo.addClassName("logo");
 
-        Button newGame = new Button("New Game");
+        // TODO: once content is preserved on reload we need a better solution.
+        Anchor newGame = new Anchor("/", "New Game");
 
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, newGame);
         header.addClassName("header");

@@ -1,7 +1,10 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.google.common.base.Strings;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -25,7 +28,8 @@ public class MathPyramidView extends VerticalLayout {
     private final MathPyramidLayout layout;
     private MathPyramidModel model;
 
-    public MathPyramidView(@Autowired Environment env, @Autowired MathPyramidLayout layout) {
+    @Autowired
+    public MathPyramidView(Environment env, MathPyramidLayout layout) {
         this.env = env;
         addClassName("app-layout");
         this.layout = layout;
@@ -67,8 +71,16 @@ public class MathPyramidView extends VerticalLayout {
             model.setUserInput(currentRow, currentColumn, textField.getValue());
             updatePyramidBlock(currentRow, currentColumn, textField);
             if (model.isSolved()) {
-                Notification notification = Notification.show("Solved! Congratulations!", 20000, Notification.Position.MIDDLE);
-                notification.addDetachListener(detachEvent -> refresh());
+                VerticalLayout layout = new VerticalLayout();
+                Span content = new Span("Solved! Congratulations!");
+                layout.add(content);
+                Button closeButton = new Button("Close");
+                layout.add(closeButton);
+                Notification notification = new Notification(layout);
+                notification.setDuration(3000);
+                notification.setPosition(Notification.Position.MIDDLE);
+                closeButton.addClickListener(closeButtonClickedEvent -> notification.close());
+                notification.open();
             }
         });
     }

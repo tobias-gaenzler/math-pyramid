@@ -13,20 +13,23 @@ class MathPyramidLayoutTest {
     @ParameterizedTest
     @CsvSource({"3,6", "4,10", "5,15", "6,21"})
     public void testThatCorrectNumberOfPyramidBlocksAreCreated(int size, int blocks) {
-        MathPyramidLayout layout = new MathPyramidLayout(size);
+        MathPyramidLayout layout = new MathPyramidLayout();
+        layout.init(size);
         assertThat(layout.getPyramidBlocks().size()).isEqualTo(blocks);
     }
 
     @ParameterizedTest
     @CsvSource({"3,3", "4,4", "5,5", "6,6"})
     public void testThatCorrectNumberOfRowsAreCreated(int size, int rows) {
-        MathPyramidLayout layout = new MathPyramidLayout(size);
+        MathPyramidLayout layout = new MathPyramidLayout();
+        layout.init(size);
         assertThat(layout.getComponentCount()).isEqualTo(rows);
     }
 
     @Test
     public void testThatEachRowHasCorrectNumberOfBlocks() {
-        MathPyramidLayout layout = new MathPyramidLayout(3);
+        MathPyramidLayout layout = new MathPyramidLayout();
+        layout.init(3);
         // top row
         assertThat(((HasOrderedComponents<?>) layout.getComponentAt(0)).getComponentCount()).isEqualTo(1);
         // middle row

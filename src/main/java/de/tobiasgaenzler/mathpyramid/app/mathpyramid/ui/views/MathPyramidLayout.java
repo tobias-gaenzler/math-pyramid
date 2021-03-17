@@ -3,33 +3,29 @@ package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Scope("prototype")
 public class MathPyramidLayout extends VerticalLayout {
 
     public static final String MATHPYRAMID_LAYOUT_ID = "mathpyramid-layout";
     public static final String MATHPYRAMID_LAYOUT_CSS_CLASS = "mathpyramid-layout";
     private final List<TextField> pyramidBlocks = new ArrayList<>();
-    private final int size;
 
-    public MathPyramidLayout(int size) {
+    public MathPyramidLayout() {
         super();
         // styling
         setId(MATHPYRAMID_LAYOUT_ID);
         addClassNames(MATHPYRAMID_LAYOUT_CSS_CLASS);
         setSizeUndefined(); // center
-        // create layout
-        this.size = size;
-        refresh();
     }
 
-    public List<TextField> getPyramidBlocks() {
-        return pyramidBlocks;
-    }
-
-    private void refresh() {
+    public void init(int size) {
         pyramidBlocks.clear();
         removeAll();
 
@@ -37,6 +33,10 @@ public class MathPyramidLayout extends VerticalLayout {
         for (int rowId = size - 1; rowId >= 0; rowId = rowId - 1) {
             addComponentAsFirst(createRowLayout(rowId));
         }
+    }
+
+    public List<TextField> getPyramidBlocks() {
+        return pyramidBlocks;
     }
 
     private HorizontalLayout createRowLayout(Integer rowId) {

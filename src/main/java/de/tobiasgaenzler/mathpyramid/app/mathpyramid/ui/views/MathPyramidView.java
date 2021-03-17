@@ -16,18 +16,19 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 @Route(value = "", layout = MainLayout.class) // use this view as default view ("/"), set this as content in MainLayout
-// Local styles for text fields (can style parts, ...)
+// Local styles for text fields (can style shadow dom, parts, ...)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @PageTitle("Math-Pyramid")
 public class MathPyramidView extends VerticalLayout {
 
     private final Environment env;
-    private MathPyramidLayout layout;
+    private final MathPyramidLayout layout;
     private MathPyramidModel model;
 
-    public MathPyramidView(@Autowired Environment env) {
+    public MathPyramidView(@Autowired Environment env, @Autowired MathPyramidLayout layout) {
         this.env = env;
         addClassName("app-layout");
+        this.layout = layout;
         refresh();
     }
 
@@ -35,7 +36,7 @@ public class MathPyramidView extends VerticalLayout {
         removeAll();
         int maxValue = env.getProperty("math-pyramid.max-value", Integer.class, 100);
         model = new MathPyramidModel(maxValue);
-        layout = new MathPyramidLayout(model.getSize());
+        layout.init(model.getSize());
         add(layout);
         bind();
     }

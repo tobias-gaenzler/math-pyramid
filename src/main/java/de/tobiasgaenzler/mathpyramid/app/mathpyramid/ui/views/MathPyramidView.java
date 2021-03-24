@@ -1,6 +1,9 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.google.common.base.Strings;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Span;
@@ -9,8 +12,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.shared.Registration;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModel;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModelFactory;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -31,7 +36,8 @@ public class MathPyramidView extends VerticalLayout {
     private final MathPyramidModelFactory mathPyramidModelFactory;
     private final MathPyramidLayout layout;
     private MathPyramidModel model;
-
+    private Registration broadcasterRegistration;
+    private Registration buttonRegistration;
 
     @Autowired
     public MathPyramidView(Environment env, MathPyramidModelFactory mathPyramidModelFactory, MathPyramidLayout layout) {
@@ -39,17 +45,8 @@ public class MathPyramidView extends VerticalLayout {
         this.mathPyramidModelFactory = mathPyramidModelFactory;
         this.layout = layout;
         addClassName("app-layout");
-        refresh();
-    }
-
-    private void refresh() {
-        removeAll();
-        int maxValue = env.getProperty("math-pyramid.max-value", Integer.class, DEFAULT_MAX_VALUE);
-        int defaultSize = env.getProperty("math-pyramid.default-size", Integer.class, DEFAULT_SIZE);
-        model = mathPyramidModelFactory.createMathPyramid(defaultSize, maxValue);
-        layout.init(model.getSize());
-        add(layout);
-        bind();
+        createModel();
+        refresh(this.model);
     }
 
     public void bind() {
@@ -59,6 +56,62 @@ public class MathPyramidView extends VerticalLayout {
                 bindPyramidBlock(row, column);
             }
         }
+    }
+
+
+    public void updatePyramidBlock(final int currentRow, final int currentColumn, TextField textField) {
+        textField.removeClassNames("correct", "incorrect");
+        String input = Strings.nullToEmpty(textField.getValue()).trim();
+        if (model.isUserInputCorrect(currentRow, currentColumn)) {
+            textField.addClassName("correct");
+            textField.setReadOnly(true);
+        } else if (!Strings.isNullOrEmpty(input)) {
+            textField.addClassName("incorrect");
+        }
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        UI ui = attachEvent.getUI();
+        if (broadcasterRegistration == null) {
+            broadcasterRegistration = Broadcaster.register(model -> {
+                ui.access(() -> {
+                    layout.getStartButton().setEnabled(false);
+                    refresh((MathPyramidModel) model);
+                });
+            });
+        }
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        if(broadcasterRegistration != null) {
+            broadcasterRegistration.remove();
+        }
+        broadcasterRegistration = null;
+    }
+
+
+    private void refresh(MathPyramidModel model) {
+        this.model = model;
+        removeAll();
+        layout.init(model.getSize());
+        if(buttonRegistration != null) {
+            buttonRegistration.remove();
+        }
+        buttonRegistration = layout.getStartButton().addClickListener(event -> {
+            createModel();
+            layout.getStartButton().setEnabled(false);
+            Broadcaster.broadcast(this.model);
+        });
+        add(layout);
+        bind();
+    }
+
+    private void createModel() {
+        int maxValue = env.getProperty("math-pyramid.max-value", Integer.class, DEFAULT_MAX_VALUE);
+        int defaultSize = env.getProperty("math-pyramid.default-size", Integer.class, DEFAULT_SIZE);
+        model = mathPyramidModelFactory.createMathPyramid(defaultSize, maxValue);
     }
 
     private void bindPyramidBlock(int row, int column) {
@@ -90,16 +143,5 @@ public class MathPyramidView extends VerticalLayout {
                 notification.open();
             }
         });
-    }
-
-    public void updatePyramidBlock(final int currentRow, final int currentColumn, TextField textField) {
-        textField.removeClassNames("correct", "incorrect");
-        String input = Strings.nullToEmpty(textField.getValue()).trim();
-        if (model.isUserInputCorrect(currentRow, currentColumn)) {
-            textField.addClassName("correct");
-            textField.setReadOnly(true);
-        } else if (!Strings.isNullOrEmpty(input)) {
-            textField.addClassName("incorrect");
-        }
     }
 }

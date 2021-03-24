@@ -1,6 +1,7 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
 
 import com.vaadin.flow.component.HasOrderedComponents;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.MathPyramidLayout;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,7 @@ class MathPyramidLayoutTest {
     public void testThatCorrectNumberOfRowsAreCreated(int size, int rows) {
         MathPyramidLayout layout = new MathPyramidLayout();
         layout.init(size);
-        assertThat(layout.getComponentCount()).isEqualTo(rows);
+        assertThat(layout.getChildren().filter(child -> child instanceof HorizontalLayout).count()).isEqualTo(rows);
     }
 
     @Test

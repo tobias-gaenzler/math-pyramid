@@ -3,6 +3,7 @@ package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -43,15 +44,17 @@ public class MathPyramidLayout extends VerticalLayout {
         HorizontalLayout rowLayout = new HorizontalLayout();
         // add rowId + 1 fields (e.g. one field for row 0, two fields for row 1)
         for (int colId = 0; colId < rowId + 1; colId++) {
-            rowLayout.addComponentAsFirst(createTextField());
+            rowLayout.addComponentAsFirst(createPyramidBlock());
         }
         rowLayout.addClassName("row");
         return rowLayout;
     }
 
-    private IntegerField createTextField() {
-        IntegerField textField = new IntegerField();
-        pyramidBlocks.add(textField);
-        return textField;
+    private IntegerField createPyramidBlock() {
+        IntegerField pyramidBlock = new IntegerField();
+        pyramidBlock.setValueChangeMode(ValueChangeMode.LAZY);
+        pyramidBlock.setValueChangeTimeout(500);
+        pyramidBlocks.add(pyramidBlock);
+        return pyramidBlock;
     }
 }

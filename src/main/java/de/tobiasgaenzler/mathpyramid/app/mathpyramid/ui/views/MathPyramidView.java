@@ -1,6 +1,8 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.google.common.base.Strings;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
@@ -13,14 +15,16 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidCalculator;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModel;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModelFactory;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.MainLayout;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import static de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster.broadcast;
 
 @Component
 @Scope("prototype")
@@ -35,17 +39,22 @@ public class MathPyramidView extends VerticalLayout {
     private final Environment env;
     private final MathPyramidModelFactory mathPyramidModelFactory;
     private final MathPyramidLayout layout;
+    private final EventBus uiEventBus;
+    private final MathPyramidCalculator calculator;
     private MathPyramidModel model;
     private Registration broadcasterRegistration;
-    private Registration buttonRegistration;
+    private Integer size;
 
     @Autowired
-    public MathPyramidView(Environment env, MathPyramidModelFactory mathPyramidModelFactory, MathPyramidLayout layout) {
+    public MathPyramidView(Environment env, MathPyramidModelFactory mathPyramidModelFactory,
+                           MathPyramidLayout layout, EventBus uiEventBus, MathPyramidCalculator calculator) {
         this.env = env;
         this.mathPyramidModelFactory = mathPyramidModelFactory;
         this.layout = layout;
+        this.uiEventBus = uiEventBus;
+        this.calculator = calculator;
         addClassName("app-layout");
-        createModel();
+        createModel(true);
         refresh(this.model);
     }
 
@@ -57,7 +66,6 @@ public class MathPyramidView extends VerticalLayout {
             }
         }
     }
-
 
     public void updatePyramidBlock(final int currentRow, final int currentColumn, TextField textField) {
         textField.removeClassNames("correct", "incorrect");
@@ -72,50 +80,81 @@ public class MathPyramidView extends VerticalLayout {
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
+        uiEventBus.register(this);
         UI ui = attachEvent.getUI();
         if (broadcasterRegistration == null) {
-            broadcasterRegistration = Broadcaster.register(model -> {
-                ui.access(() -> {
-                    layout.getStartButton().setEnabled(false);
-                    refresh((MathPyramidModel) model);
-                });
-            });
+            broadcasterRegistration = Broadcaster.register(object -> ui.access(() -> {
+                if(object instanceof  MathPyramidModel) {
+                    refresh((MathPyramidModel) object);
+                } else {
+                    createNotification(((String) object)).open();
+                }
+            }));
         }
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-        if(broadcasterRegistration != null) {
+        if (broadcasterRegistration != null) {
             broadcasterRegistration.remove();
         }
         broadcasterRegistration = null;
     }
 
+    @Subscribe
+    public void newGameEventReceived(NewGameEvent event) {
+        createModel(false);
+        refresh(this.model);
+
+    }
+
+    @Subscribe
+    public void newMultiplayerGameEventReceived(NewMultiplayerGameEvent event) {
+        createModel(true);
+        broadcast(this.model);
+    }
+
+    @Subscribe
+    public void harder(IncreaseDifficultyEvent event) {
+        if (size < 10) {
+            size++;
+        } else {
+            return;
+        }
+        createModel(true);
+        refresh(this.model);
+    }
+
+    @Subscribe
+    public void easier(DecreaseDifficultyEvent event) {
+        if(size > 3) {
+            size--;
+        } else {
+            return;
+        }
+        createModel(true);
+        refresh(this.model);
+    }
 
     private void refresh(MathPyramidModel model) {
         this.model = model;
         removeAll();
         layout.init(model.getSize());
-        if(buttonRegistration != null) {
-            buttonRegistration.remove();
-        }
-        buttonRegistration = layout.getStartButton().addClickListener(event -> {
-            createModel();
-            layout.getStartButton().setEnabled(false);
-            Broadcaster.broadcast(this.model);
-        });
         add(layout);
         bind();
     }
 
-    private void createModel() {
+    private void createModel(boolean multiplayer) {
         int maxValue = env.getProperty("math-pyramid.max-value", Integer.class, DEFAULT_MAX_VALUE);
-        int defaultSize = env.getProperty("math-pyramid.default-size", Integer.class, DEFAULT_SIZE);
-        model = mathPyramidModelFactory.createMathPyramid(defaultSize, maxValue);
+        if(size == null) {
+            size = env.getProperty("math-pyramid.default-size", Integer.class, DEFAULT_SIZE);
+        }
+        model = mathPyramidModelFactory.createMathPyramid(size, maxValue);
+        model.setMultiplayer(multiplayer);
     }
 
     private void bindPyramidBlock(int row, int column) {
-        int fieldIndex = model.getIndex(row, column);
+        int fieldIndex = calculator.getIndex(row, column, model.getSize());
         TextField textField = layout.getPyramidBlocks().get(fieldIndex);
         if (model.isUserInput(row, column)) {
             addValueChangeListener(row, column, textField);
@@ -131,17 +170,25 @@ public class MathPyramidView extends VerticalLayout {
             model.setUserInput(currentRow, currentColumn, textField.getValue());
             updatePyramidBlock(currentRow, currentColumn, textField);
             if (model.isSolved()) {
-                VerticalLayout layout = new VerticalLayout();
-                Span content = new Span("Solved! Congratulations!");
-                layout.add(content);
-                Button closeButton = new Button("Close");
-                layout.add(closeButton);
-                Notification notification = new Notification(layout);
-                notification.setDuration(3000);
-                notification.setPosition(Notification.Position.MIDDLE);
-                closeButton.addClickListener(closeButtonClickedEvent -> notification.close());
-                notification.open();
+                if(model.getMultiplayer()) {
+                    broadcast("Solved by " + UI.getCurrent().getSession().getAttribute("username"));
+                } else{
+                    createNotification("Solved! Congratulations!").open();
+                }
             }
         });
+    }
+
+    private Notification createNotification(String message) {
+        VerticalLayout layout = new VerticalLayout();
+        Span content = new Span(message);
+        layout.add(content);
+        Button closeButton = new Button("Close");
+        layout.add(closeButton);
+        Notification notification = new Notification(layout);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        closeButton.addClickListener(closeButtonClickedEvent -> notification.close());
+        return notification;
     }
 }

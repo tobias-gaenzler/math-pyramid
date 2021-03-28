@@ -16,7 +16,8 @@ class MathPyramidModelTest {
     public void testIsSolvedReturnsFalseForInitialModel() {
         MathPyramidModel model = new MathPyramidModel(3,
                 Map.of(0, 1, 1, 1, 2, 1),
-                List.of(1, 1, 1, 2, 2, 4)
+                List.of(1, 1, 1, 2, 2, 4),
+                new MathPyramidCalculator()
         );
         assertThat(model.isSolved()).isEqualTo(false);
     }
@@ -26,7 +27,8 @@ class MathPyramidModelTest {
     public void testIsUserInputCorrectReturnsFalseBeforeUserInput(int row, int column) {
         MathPyramidModel model = new MathPyramidModel(3,
                 Map.of(0, 1, 1, 1, 2, 1),
-                List.of(1, 1, 1, 2, 2, 4)
+                List.of(1, 1, 1, 2, 2, 4),
+                new MathPyramidCalculator()
         );
         assertThat(model.isUserInputCorrect(row, column)).isEqualTo(false);
     }
@@ -36,7 +38,8 @@ class MathPyramidModelTest {
     public void testIsUserInputCorrectThrowsExceptionForOutOfRangeValues(int row, int column) {
         MathPyramidModel model = new MathPyramidModel(3,
                 Map.of(0, 1, 1, 1, 2, 1),
-                List.of(1, 1, 1, 2, 2, 4)
+                List.of(1, 1, 1, 2, 2, 4),
+                new MathPyramidCalculator()
         );
         assertThatThrownBy(() -> model.isUserInputCorrect(row, column))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -46,13 +49,17 @@ class MathPyramidModelTest {
     public void testIsSolvedReturnsTrueWhenPyramidIsSolved() {
         MathPyramidModel model = new MathPyramidModel(3,
                 Map.of(0, 1, 1, 1, 2, 1),
-                List.of(1, 1, 1, 2, 2, 4)
+                List.of(1, 1, 1, 2, 2, 4),
+                new MathPyramidCalculator()
         );
         // set solution into user input fields
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3 - row; column++) {
                 if (model.isUserInput(row, column)) {
-                    model.setUserInput(row, column, model.getSolution().get(model.getIndex(row, column)).toString());
+                    model.setUserInput(
+                            row,
+                            column,
+                            model.getSolution().get(new MathPyramidCalculator().getIndex(row, column, 3)).toString());
                 }
             }
         }
@@ -63,7 +70,8 @@ class MathPyramidModelTest {
     public void testThatOnlyWritableBlocksCanBeSet() {
         MathPyramidModel model = new MathPyramidModel(3,
                 Map.of(0, 1, 1, 1, 2, 1),
-                List.of(1, 1, 1, 2, 2, 4)
+                List.of(1, 1, 1, 2, 2, 4),
+                new MathPyramidCalculator()
         );
         // test all read only blocks (no user input allowed)
         for (int row = 0; row < 3; row++) {

@@ -41,7 +41,7 @@ class IntegrationTest {
         waitForApplicationAvailable(driver);
 
         // find plain dom text fields
-        List<WebElement> textFields = driver.findElements(By.cssSelector("vaadin-text-field"));
+        List<WebElement> textFields = driver.findElements(By.cssSelector("vaadin-integer-field"));
         // find shadow dom input fields (from top to bottom, left to right)
         List<WebElement> inputFields = textFields.stream().map(textField -> {
             WebElement shadowTextField = getShadowRootElement(textField, driver);

@@ -45,6 +45,6 @@ class MathPyramidModelFactoryTest {
     }
 
     private int valueAt(MathPyramidModel mathPyramid, int row, int col) {
-        return Integer.parseInt(mathPyramid.getSolutionAt(row, col));
+        return mathPyramid.getSolutionAt(row, col);
     }
 }

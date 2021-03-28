@@ -1,6 +1,5 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
-import com.google.common.base.Strings;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
@@ -11,7 +10,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -67,13 +66,13 @@ public class MathPyramidView extends VerticalLayout {
         }
     }
 
-    public void updatePyramidBlock(final int currentRow, final int currentColumn, TextField textField) {
+    public void updatePyramidBlock(final int currentRow, final int currentColumn, IntegerField textField) {
         textField.removeClassNames("correct", "incorrect");
-        String input = Strings.nullToEmpty(textField.getValue()).trim();
+        Integer input = textField.getValue();
         if (model.isUserInputCorrect(currentRow, currentColumn)) {
             textField.addClassName("correct");
             textField.setReadOnly(true);
-        } else if (!Strings.isNullOrEmpty(input)) {
+        } else if (input != null) {
             textField.addClassName("incorrect");
         }
     }
@@ -155,7 +154,7 @@ public class MathPyramidView extends VerticalLayout {
 
     private void bindPyramidBlock(int row, int column) {
         int fieldIndex = calculator.getIndex(row, column, model.getSize());
-        TextField textField = layout.getPyramidBlocks().get(fieldIndex);
+        IntegerField textField = layout.getPyramidBlocks().get(fieldIndex);
         if (model.isUserInput(row, column)) {
             addValueChangeListener(row, column, textField);
         } else {
@@ -164,7 +163,7 @@ public class MathPyramidView extends VerticalLayout {
         }
     }
 
-    private void addValueChangeListener(final int currentRow, final int currentColumn, TextField textField) {
+    private void addValueChangeListener(final int currentRow, final int currentColumn, IntegerField textField) {
         textField.addValueChangeListener(event -> {
             // store user input in model
             model.setUserInput(currentRow, currentColumn, textField.getValue());

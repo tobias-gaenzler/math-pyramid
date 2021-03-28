@@ -47,9 +47,10 @@ class MathPyramidModelTest {
 
     @Test
     public void testIsSolvedReturnsTrueWhenPyramidIsSolved() {
+        List<Integer> solution = List.of(1, 1, 1, 2, 2, 4);
         MathPyramidModel model = new MathPyramidModel(3,
                 Map.of(0, 1, 1, 1, 2, 1),
-                List.of(1, 1, 1, 2, 2, 4),
+                solution,
                 new MathPyramidCalculator()
         );
         // set solution into user input fields
@@ -59,7 +60,7 @@ class MathPyramidModelTest {
                     model.setUserInput(
                             row,
                             column,
-                            model.getSolution().get(new MathPyramidCalculator().getIndex(row, column, 3)).toString());
+                            solution.get(new MathPyramidCalculator().getIndex(row, column, 3)));
                 }
             }
         }
@@ -79,7 +80,7 @@ class MathPyramidModelTest {
                 if (!model.isUserInput(row, column)) {
                     int finalReadOnlyRow = row;
                     int finalReadOnlyColumn = column;
-                    assertThatThrownBy(() -> model.setUserInput(finalReadOnlyRow, finalReadOnlyColumn, ""))
+                    assertThatThrownBy(() -> model.setUserInput(finalReadOnlyRow, finalReadOnlyColumn, 0))
                             .isInstanceOf(IllegalArgumentException.class);
                 }
             }

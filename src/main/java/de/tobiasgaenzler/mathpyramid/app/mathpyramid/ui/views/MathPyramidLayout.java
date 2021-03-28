@@ -2,7 +2,7 @@ package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ public class MathPyramidLayout extends VerticalLayout {
 
     public static final String MATHPYRAMID_LAYOUT_ID = "mathpyramid-layout";
     public static final String MATHPYRAMID_LAYOUT_CSS_CLASS = "mathpyramid-layout";
-    private final List<TextField> pyramidBlocks = new ArrayList<>();
+    private final List<IntegerField> pyramidBlocks = new ArrayList<>();
 
     public MathPyramidLayout() {
         super();
@@ -35,7 +35,7 @@ public class MathPyramidLayout extends VerticalLayout {
         }
     }
 
-    public List<TextField> getPyramidBlocks() {
+    public List<IntegerField> getPyramidBlocks() {
         return pyramidBlocks;
     }
 
@@ -49,8 +49,8 @@ public class MathPyramidLayout extends VerticalLayout {
         return rowLayout;
     }
 
-    private TextField createTextField() {
-        TextField textField = new TextField();
+    private IntegerField createTextField() {
+        IntegerField textField = new IntegerField();
         pyramidBlocks.add(textField);
         return textField;
     }

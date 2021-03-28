@@ -65,4 +65,28 @@ class MathPyramidCalculatorTest {
         Set<Integer> positionValues = IntStream.range(0, numberOfBlocks).boxed().collect(Collectors.toSet());
         return Sets.combinations(positionValues, numberOfPrefilledBlocks);
     }
+
+    @ParameterizedTest
+    @CsvSource({"3,5", "4,100", "5,10000", "10," + Integer.MAX_VALUE})
+    public void testMathPyramidCreatesPyramidWithValuesLowerOrEqualThanMaxValue(int size, int maxValue) {
+        assertThat(new MathPyramidCalculator().createRandomSolution(size, maxValue).stream()
+                .filter(value -> value > maxValue).findFirst().isEmpty())
+                .isEqualTo(true);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"3,6", "4,10", "5,15", "6,21", "7,28", "8,36", "9,45", "10,55"})
+    public void testCreatesPyramidWithCorrectSizing(int size, int numberOfBlocks) {
+        MathPyramidCalculator mathPyramidCalculator = new MathPyramidCalculator();
+        List<Integer> solution = mathPyramidCalculator.createRandomSolution(size, 10_000);
+        Map<Integer, Integer> startValues = mathPyramidCalculator.getUniquelySolvableRandomStartValues(size, solution);
+        // number of start values is equal to size
+        assertThat(startValues.size()).isEqualTo(size);
+        // number of blocks is equal to number of solution entries
+        assertThat(solution.size()).isEqualTo(numberOfBlocks);
+    }
+
+
+
+
 }

@@ -4,6 +4,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,7 @@ import java.util.List;
 @Scope("prototype")
 public class MathPyramidLayout extends VerticalLayout {
 
+    private static final Logger logger = LoggerFactory.getLogger(MathPyramidLayout.class);
     public static final String MATHPYRAMID_LAYOUT_ID = "mathpyramid-layout";
     public static final String MATHPYRAMID_LAYOUT_CSS_CLASS = "mathpyramid-layout";
     private final List<IntegerField> pyramidBlocks = new ArrayList<>();
@@ -34,6 +37,7 @@ public class MathPyramidLayout extends VerticalLayout {
         for (int rowId = size - 1; rowId >= 0; rowId = rowId - 1) {
             addComponentAsFirst(createRowLayout(rowId));
         }
+        logger.debug("Created layout for size {}", size);
     }
 
     public List<IntegerField> getPyramidBlocks() {
@@ -53,7 +57,7 @@ public class MathPyramidLayout extends VerticalLayout {
     private IntegerField createPyramidBlock() {
         IntegerField pyramidBlock = new IntegerField();
         pyramidBlock.setValueChangeMode(ValueChangeMode.LAZY);
-        pyramidBlock.setValueChangeTimeout(500);
+        pyramidBlock.setValueChangeTimeout(300);
         pyramidBlocks.add(pyramidBlock);
         return pyramidBlock;
     }

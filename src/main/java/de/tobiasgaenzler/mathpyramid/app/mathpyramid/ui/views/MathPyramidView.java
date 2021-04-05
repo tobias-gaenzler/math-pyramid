@@ -18,6 +18,8 @@ import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidCalc
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModel;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModelFactory;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
@@ -35,6 +37,7 @@ public class MathPyramidView extends VerticalLayout {
 
     public static final int DEFAULT_SIZE = 3;
     public static final int DEFAULT_MAX_VALUE = 100;
+    private static final Logger logger = LoggerFactory.getLogger(MathPyramidView.class);
     private final Environment env;
     private final MathPyramidModelFactory mathPyramidModelFactory;
     private final MathPyramidLayout layout;
@@ -43,6 +46,9 @@ public class MathPyramidView extends VerticalLayout {
     private MathPyramidModel model;
     private Registration broadcasterRegistration;
     private Integer size;
+    // Use this variable to show finish notification only once
+    // model can not be used because it is shared between all participants in multiplayer mode
+    private Boolean multiplayerGameInProgress = false;
 
     @Autowired
     public MathPyramidView(Environment env, MathPyramidModelFactory mathPyramidModelFactory,
@@ -53,7 +59,8 @@ public class MathPyramidView extends VerticalLayout {
         this.uiEventBus = uiEventBus;
         this.calculator = calculator;
         addClassName("app-layout");
-        createModel(true);
+        logger.debug("Initializing new view");
+        createModel(false);
         refresh(this.model);
     }
 
@@ -83,10 +90,17 @@ public class MathPyramidView extends VerticalLayout {
         UI ui = attachEvent.getUI();
         if (broadcasterRegistration == null) {
             broadcasterRegistration = Broadcaster.register(object -> ui.access(() -> {
-                if(object instanceof  MathPyramidModel) {
+                logger.debug("Received broadcast message: {} for player: {}", object, getUsername());
+                if (object instanceof MathPyramidModel) {
                     refresh((MathPyramidModel) object);
                 } else {
-                    createNotification(((String) object)).open();
+                    // ensure that finish notification is displayed only once per game
+                    if (model.getMultiplayerGame() && isMultiplayerGameInProgress()) {
+                        createNotification(((String) object)).open();
+                    }
+                    if (isMultiplayerGameInProgress()) {
+                        endMultiplayerGame();
+                    }
                 }
             }));
         }
@@ -102,54 +116,67 @@ public class MathPyramidView extends VerticalLayout {
 
     @Subscribe
     public void newGameEventReceived(NewGameEvent event) {
+        logger.info("New single player game started by {}", getUsername());
         createModel(false);
         refresh(this.model);
 
     }
 
+    private Object getUsername() {
+        return UI.getCurrent().getSession().getAttribute("username");
+    }
+
     @Subscribe
     public void newMultiplayerGameEventReceived(NewMultiplayerGameEvent event) {
+        logger.info("New multiplayer game started by {}", getUsername());
         createModel(true);
         broadcast(this.model);
     }
 
     @Subscribe
     public void harder(IncreaseDifficultyEvent event) {
+        logger.info("Increasing difficulty");
         if (size < 10) {
             size++;
         } else {
             return;
         }
-        createModel(true);
+        createModel(false);
         refresh(this.model);
     }
 
     @Subscribe
     public void easier(DecreaseDifficultyEvent event) {
-        if(size > 3) {
+        logger.info("Decreasing difficulty");
+        if (size > 3) {
             size--;
         } else {
             return;
         }
-        createModel(true);
+        createModel(false);
         refresh(this.model);
     }
 
     private void refresh(MathPyramidModel model) {
+        logger.info("Refreshing model");
         this.model = model;
         removeAll();
         layout.init(model.getSize());
         add(layout);
         bind();
+        if (model.getMultiplayerGame()) {
+            startMultiplayerGame();
+        }
     }
 
     private void createModel(boolean multiplayer) {
+        logger.info("Creating new model, multiplayer: {}", multiplayer);
         int maxValue = env.getProperty("math-pyramid.max-value", Integer.class, DEFAULT_MAX_VALUE);
-        if(size == null) {
+        if (size == null) {
             size = env.getProperty("math-pyramid.default-size", Integer.class, DEFAULT_SIZE);
         }
         model = mathPyramidModelFactory.createMathPyramid(size, maxValue);
-        model.setMultiplayer(multiplayer);
+        model.setMultiplayerGame(multiplayer);
     }
 
     private void bindPyramidBlock(int row, int column) {
@@ -166,12 +193,15 @@ public class MathPyramidView extends VerticalLayout {
     private void addValueChangeListener(final int currentRow, final int currentColumn, IntegerField textField) {
         textField.addValueChangeListener(event -> {
             // store user input in model
+            logger.debug("Received input row {}, column {}: value {}", currentRow, currentColumn, textField.getValue());
             model.setUserInput(currentRow, currentColumn, textField.getValue());
             updatePyramidBlock(currentRow, currentColumn, textField);
             if (model.isSolved()) {
-                if(model.getMultiplayer()) {
-                    broadcast("Solved by " + UI.getCurrent().getSession().getAttribute("username"));
-                } else{
+                if (model.getMultiplayerGame()) {
+                    logger.info("Multiplayer game finished by {}", getUsername());
+                    broadcast("Solved by " + getUsername());
+                } else {
+                    logger.info("Single player game finished by {}", getUsername());
                     createNotification("Solved! Congratulations!").open();
                 }
             }
@@ -185,9 +215,22 @@ public class MathPyramidView extends VerticalLayout {
         Button closeButton = new Button("Close");
         layout.add(closeButton);
         Notification notification = new Notification(layout);
-        notification.setDuration(3000);
+        notification.setDuration(0);
         notification.setPosition(Notification.Position.MIDDLE);
         closeButton.addClickListener(closeButtonClickedEvent -> notification.close());
         return notification;
     }
+
+    private boolean isMultiplayerGameInProgress() {
+        return multiplayerGameInProgress;
+    }
+
+    private void endMultiplayerGame() {
+        multiplayerGameInProgress = false;
+    }
+
+    private void startMultiplayerGame() {
+        multiplayerGameInProgress = true;
+    }
+
 }

@@ -41,28 +41,22 @@ public class MainLayout extends AppLayout {
     private void createHeader() {
         H1 logo = new H1("Math Pyramid");
         logo.addClassName("logo");
-        if(UI.getCurrent().getSession().getAttribute("username") == null) {
+        if (UI.getCurrent().getSession().getAttribute("username") == null) {
             UI.getCurrent().getSession().setAttribute("username", UUID.randomUUID().toString().substring(0, 5));
         }
         H1 id = new H1("Name: " + UI.getCurrent().getSession().getAttribute("username"));
         id.addClassName("id");
 
         Button newGame = new Button("New Game");
-        newGame.addClickListener(event -> {
-            uiEventBus.post(new NewGameEvent());
-        });
+        newGame.addClickListener(event ->
+                uiEventBus.post(new NewGameEvent())
+        );
         Button newMultiplayerGame = new Button("New Multiplayer Game");
-        newMultiplayerGame.addClickListener(event -> {
-            uiEventBus.post(new NewMultiplayerGameEvent());
-        });
+        newMultiplayerGame.addClickListener(event -> uiEventBus.post(new NewMultiplayerGameEvent()));
         Button harderButton = new Button("bigger");
-        harderButton.addClickListener(event -> {
-            uiEventBus.post(new IncreaseDifficultyEvent());
-        });
+        harderButton.addClickListener(event -> uiEventBus.post(new IncreaseDifficultyEvent()));
         Button easierButton = new Button("smaller");
-        easierButton.addClickListener(event -> {
-            uiEventBus.post(new DecreaseDifficultyEvent());
-        });
+        easierButton.addClickListener(event -> uiEventBus.post(new DecreaseDifficultyEvent()));
 
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, id, easierButton, harderButton,
                 newMultiplayerGame, newGame);

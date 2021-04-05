@@ -1,6 +1,8 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
 
 import com.vaadin.flow.shared.Registration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.concurrent.Executor;
@@ -8,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 public class Broadcaster {
+
+    private static final Logger logger = LoggerFactory.getLogger(Broadcaster.class);
     static Executor executor = Executors.newSingleThreadExecutor();
 
     static LinkedList<Consumer<Object>> listeners = new LinkedList<>();
@@ -24,6 +28,7 @@ public class Broadcaster {
     }
 
     public static synchronized void broadcast(Object message) {
+        logger.debug("Broadcasted message: {}", message);
         for (Consumer<Object> listener : listeners) {
             executor.execute(() -> listener.accept(message));
         }

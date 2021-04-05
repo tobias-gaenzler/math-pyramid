@@ -2,6 +2,8 @@ package de.tobiasgaenzler.mathpyramid.app.mathpyramid.application;
 
 import org.ejml.factory.SingularMatrixException;
 import org.ejml.simple.SimpleMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -11,6 +13,8 @@ import java.util.stream.IntStream;
 
 @Service
 public class MathPyramidCalculator {
+
+    private static final Logger logger = LoggerFactory.getLogger(MathPyramidCalculator.class);
 
     public int getIndex(Integer rowId, Integer colId, Integer size) {
         // starting in bottom row left, e.g. for pyramid of size 3:
@@ -73,7 +77,7 @@ public class MathPyramidCalculator {
             startValues = getRandomStartValues(size, solution);
             tries++;
         }
-        System.out.println("Needed " + tries +   " iterations to find suitable start values.");
+        logger.debug("Needed {} iterations to find suitable start values.", tries);
         return startValues;
     }
 

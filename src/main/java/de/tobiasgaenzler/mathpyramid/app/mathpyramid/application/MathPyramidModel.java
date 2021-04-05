@@ -14,7 +14,7 @@ public class MathPyramidModel {
     private final List<Integer> solution;
     private final Table<Integer, Integer, Integer> userInput = HashBasedTable.create();
     private final MathPyramidCalculator calculator;
-    private boolean multiplayer;
+    private boolean multiplayerGame = false;
 
     MathPyramidModel(Integer size, Map<Integer, Integer> startValues, List<Integer> solution, MathPyramidCalculator calculator) {
         this.size = size;
@@ -54,7 +54,9 @@ public class MathPyramidModel {
             String message = MessageFormat.format("Can not enter values in read only block row {0}, column {1}.", row, column);
             throw new IllegalArgumentException(message);
         }
-        userInput.put(row, column, value);
+        if (value != null) {
+            userInput.put(row, column, value);
+        }
     }
 
     public boolean isUserInput(Integer row, Integer column) {
@@ -76,11 +78,11 @@ public class MathPyramidModel {
         return userInput.get(rowId, colId);
     }
 
-    public void setMultiplayer(boolean multiplayer) {
-        this.multiplayer = multiplayer;
+    public boolean getMultiplayerGame() {
+        return multiplayerGame;
     }
 
-    public boolean getMultiplayer() {
-        return multiplayer;
+    public void setMultiplayerGame(boolean multiplayerGame) {
+        this.multiplayerGame = multiplayerGame;
     }
 }

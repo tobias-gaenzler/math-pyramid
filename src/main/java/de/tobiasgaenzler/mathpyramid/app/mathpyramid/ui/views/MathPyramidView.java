@@ -90,7 +90,7 @@ public class MathPyramidView extends VerticalLayout {
         UI ui = attachEvent.getUI();
         if (broadcasterRegistration == null) {
             broadcasterRegistration = Broadcaster.register(object -> ui.access(() -> {
-                logger.debug("Received broadcast message: {} for player: {}", object, getUsername());
+                logger.debug("Received broadcast message: {} for player: {}", object, getPlayerName());
                 if (object instanceof MathPyramidModel) {
                     refresh((MathPyramidModel) object);
                 } else {
@@ -116,26 +116,26 @@ public class MathPyramidView extends VerticalLayout {
 
     @Subscribe
     public void newGameEventReceived(NewGameEvent event) {
-        logger.info("New single player game started by {}", getUsername());
+        logger.info("New single player game started by player {}", getPlayerName());
         createModel(false);
         refresh(this.model);
 
     }
 
-    private Object getUsername() {
-        return UI.getCurrent().getSession().getAttribute("username");
+    private String getPlayerName() {
+        return (String) UI.getCurrent().getSession().getAttribute("username");
     }
 
     @Subscribe
     public void newMultiplayerGameEventReceived(NewMultiplayerGameEvent event) {
-        logger.info("New multiplayer game started by {}", getUsername());
+        logger.info("New multiplayer game started by player {}", getPlayerName());
         createModel(true);
         broadcast(this.model);
     }
 
     @Subscribe
     public void harder(IncreaseDifficultyEvent event) {
-        logger.info("Increasing difficulty");
+        logger.info("Increasing difficulty, player: {}", getPlayerName());
         if (size < 10) {
             size++;
         } else {
@@ -147,7 +147,7 @@ public class MathPyramidView extends VerticalLayout {
 
     @Subscribe
     public void easier(DecreaseDifficultyEvent event) {
-        logger.info("Decreasing difficulty");
+        logger.info("Decreasing difficulty, player: {}", getPlayerName());
         if (size > 3) {
             size--;
         } else {
@@ -158,19 +158,19 @@ public class MathPyramidView extends VerticalLayout {
     }
 
     private void refresh(MathPyramidModel model) {
-        logger.info("Refreshing model");
-        this.model = model;
+        logger.info("Refreshing model of player: {}", getPlayerName());
+        this.model = new MathPyramidModel(model);
         removeAll();
-        layout.init(model.getSize());
+        layout.init(this.model.getSize());
         add(layout);
         bind();
-        if (model.getMultiplayerGame()) {
+        if (this.model.getMultiplayerGame()) {
             startMultiplayerGame();
         }
     }
 
     private void createModel(boolean multiplayer) {
-        logger.info("Creating new model, multiplayer: {}", multiplayer);
+        logger.info("Creating new model, multiplayer: {}, player: {}", multiplayer, getPlayerName());
         int maxValue = env.getProperty("math-pyramid.max-value", Integer.class, DEFAULT_MAX_VALUE);
         if (size == null) {
             size = env.getProperty("math-pyramid.default-size", Integer.class, DEFAULT_SIZE);
@@ -193,15 +193,20 @@ public class MathPyramidView extends VerticalLayout {
     private void addValueChangeListener(final int currentRow, final int currentColumn, IntegerField textField) {
         textField.addValueChangeListener(event -> {
             // store user input in model
-            logger.debug("Received input row {}, column {}: value {}", currentRow, currentColumn, textField.getValue());
+            String username = getPlayerName();
+            logger.debug("Received input row {}, column {}: value {}, player {}",
+                    currentRow,
+                    currentColumn,
+                    textField.getValue(),
+                    username);
             model.setUserInput(currentRow, currentColumn, textField.getValue());
             updatePyramidBlock(currentRow, currentColumn, textField);
             if (model.isSolved()) {
                 if (model.getMultiplayerGame()) {
-                    logger.info("Multiplayer game finished by {}", getUsername());
-                    broadcast("Solved by " + getUsername());
+                    logger.info("Multiplayer game finished by player {}", username);
+                    broadcast("Solved by " + username);
                 } else {
-                    logger.info("Single player game finished by {}", getUsername());
+                    logger.info("Single player game finished by player {}", username);
                     createNotification("Solved! Congratulations!").open();
                 }
             }

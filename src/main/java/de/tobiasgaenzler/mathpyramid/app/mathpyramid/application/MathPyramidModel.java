@@ -31,6 +31,14 @@ public class MathPyramidModel {
         }
     }
 
+    public MathPyramidModel(MathPyramidModel other) {
+        this.size = other.size;
+        this.startValues = other.startValues;
+        this.solution = other.solution;
+        this.calculator = other.calculator;
+        this.multiplayerGame = other.multiplayerGame;
+    }
+
     public boolean isSolved() {
         for (int row = 0; row < getSize(); row++) {
             for (int column = 0; column < getSize() - row; column++) {

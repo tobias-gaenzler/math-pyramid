@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration;
 
 import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.spring.annotation.UIScope;

@@ -17,12 +17,15 @@ import com.vaadin.flow.shared.Registration;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidCalculator;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModel;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidModelFactory;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.*;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration.MathPyramidConfiguration;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.MainLayout;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.NewGameEvent;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.NewMultiplayerGameEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import static de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster.broadcast;
@@ -35,14 +38,12 @@ import static de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster.broad
 @PageTitle("Math-Pyramid")
 public class MathPyramidView extends VerticalLayout {
 
-    public static final int DEFAULT_SIZE = 3;
-    public static final int DEFAULT_MAX_VALUE = 100;
     private static final Logger logger = LoggerFactory.getLogger(MathPyramidView.class);
-    private final Environment env;
     private final MathPyramidModelFactory mathPyramidModelFactory;
     private final MathPyramidLayout layout;
     private final EventBus uiEventBus;
     private final MathPyramidCalculator calculator;
+    private final MathPyramidConfiguration config;
     private MathPyramidModel model;
     private Registration broadcasterRegistration;
     private Integer size;
@@ -51,9 +52,9 @@ public class MathPyramidView extends VerticalLayout {
     private Boolean multiplayerGameInProgress = false;
 
     @Autowired
-    public MathPyramidView(Environment env, MathPyramidModelFactory mathPyramidModelFactory,
+    public MathPyramidView(MathPyramidConfiguration config, MathPyramidModelFactory mathPyramidModelFactory,
                            MathPyramidLayout layout, EventBus uiEventBus, MathPyramidCalculator calculator) {
-        this.env = env;
+        this.config = config;
         this.mathPyramidModelFactory = mathPyramidModelFactory;
         this.layout = layout;
         this.uiEventBus = uiEventBus;
@@ -147,9 +148,9 @@ public class MathPyramidView extends VerticalLayout {
 
     private void createModel(boolean multiplayer) {
         logger.info("Creating new model, multiplayer: {}, player: {}", multiplayer, getPlayerName());
-        int maxValue = env.getProperty("math-pyramid.max-value", Integer.class, DEFAULT_MAX_VALUE);
+        int maxValue = config.getMaxValue();
         if (size == null) {
-            size = env.getProperty("math-pyramid.default-size", Integer.class, DEFAULT_SIZE);
+            size = config.getDefaultSize();
         }
         model = mathPyramidModelFactory.createMathPyramid(size, maxValue);
         model.setMultiplayerGame(multiplayer);

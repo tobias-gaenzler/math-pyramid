@@ -1,6 +1,5 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
 
-
 import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;

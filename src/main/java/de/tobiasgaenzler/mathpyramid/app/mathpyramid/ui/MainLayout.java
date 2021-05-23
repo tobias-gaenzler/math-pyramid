@@ -10,14 +10,10 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
-import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.PreserveOnRefresh;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.MathPyramidView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
@@ -35,7 +31,6 @@ public class MainLayout extends AppLayout {
     public MainLayout(EventBus uiEventBus) {
         this.uiEventBus = uiEventBus;
         createHeader();
-        createDrawer();
     }
 
     private void createHeader() {
@@ -53,28 +48,13 @@ public class MainLayout extends AppLayout {
         );
         Button newMultiplayerGame = new Button("New Multiplayer Game");
         newMultiplayerGame.addClickListener(event -> uiEventBus.post(new NewMultiplayerGameEvent()));
-        Button harderButton = new Button("bigger");
-        harderButton.addClickListener(event -> uiEventBus.post(new IncreaseDifficultyEvent()));
-        Button easierButton = new Button("smaller");
-        easierButton.addClickListener(event -> uiEventBus.post(new DecreaseDifficultyEvent()));
 
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, id, easierButton, harderButton,
-                newMultiplayerGame, newGame);
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, id, newMultiplayerGame, newGame);
         header.addClassName("header");
         header.setWidth("100%");
         header.expand(logo);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
         addToNavbar(header);
-    }
-
-    private void createDrawer() {
-        RouterLink mathPyramidGameLink = new RouterLink("Play", MathPyramidView.class);
-        mathPyramidGameLink.setHighlightCondition(HighlightConditions.sameLocation());
-
-        addToDrawer(new VerticalLayout(
-                mathPyramidGameLink
-        ));
-        setDrawerOpened(false);
     }
 }

@@ -133,30 +133,6 @@ public class MathPyramidView extends VerticalLayout {
         broadcast(this.model);
     }
 
-    @Subscribe
-    public void harder(IncreaseDifficultyEvent event) {
-        logger.info("Increasing difficulty, player: {}", getPlayerName());
-        if (size < 10) {
-            size++;
-        } else {
-            return;
-        }
-        createModel(false);
-        refresh(this.model);
-    }
-
-    @Subscribe
-    public void easier(DecreaseDifficultyEvent event) {
-        logger.info("Decreasing difficulty, player: {}", getPlayerName());
-        if (size > 3) {
-            size--;
-        } else {
-            return;
-        }
-        createModel(false);
-        refresh(this.model);
-    }
-
     private void refresh(MathPyramidModel model) {
         logger.info("Refreshing model of player: {}", getPlayerName());
         this.model = new MathPyramidModel(model);

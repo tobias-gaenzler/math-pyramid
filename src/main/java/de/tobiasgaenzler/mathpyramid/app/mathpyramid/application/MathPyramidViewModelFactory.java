@@ -7,16 +7,16 @@ import java.text.MessageFormat;
 import java.util.List;
 
 @Service
-public class MathPyramidModelFactory {
+public class MathPyramidViewModelFactory {
 
     private final MathPyramidCalculator calculator;
 
     @Autowired
-    public MathPyramidModelFactory(MathPyramidCalculator calculator) {
+    public MathPyramidViewModelFactory(MathPyramidCalculator calculator) {
         this.calculator = calculator;
     }
 
-    public MathPyramidModel createMathPyramid(Integer size, Integer maxValue) {
+    public MathPyramidViewModel create(Integer size, Integer maxValue) {
 
         if (size < 3 || size > 10) {
             String message = MessageFormat.format("Illegal size {0} for pyramid. " +
@@ -29,8 +29,8 @@ public class MathPyramidModelFactory {
             throw new IllegalArgumentException(message);
         }
         List<Integer> solution = calculator.createRandomSolution(size, maxValue);
-        return new MathPyramidModel(size, calculator.getUniquelySolvableRandomStartValues(size, solution), solution, calculator);
+        return new MathPyramidViewModel(
+                new MathPyramidModel(size, calculator.getUniquelySolvableRandomStartValues(size, solution), solution),
+                calculator);
     }
-
-
 }

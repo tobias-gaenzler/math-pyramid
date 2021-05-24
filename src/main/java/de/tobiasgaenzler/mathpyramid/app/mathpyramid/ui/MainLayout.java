@@ -1,7 +1,7 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
 
 import com.google.common.eventbus.EventBus;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -13,9 +13,9 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.UUID;
 
 @Theme(value = Lumo.class)
 // Global styles apply only to elements which are not located in shadow dom
@@ -24,29 +24,30 @@ import java.util.UUID;
 @PreserveOnRefresh
 public class MainLayout extends AppLayout {
 
+    private final Logger logger = LoggerFactory.getLogger(MainLayout.class);
     private final EventBus uiEventBus;
+    private final UserService userService;
 
     @Autowired
-    public MainLayout(EventBus uiEventBus) {
+    public MainLayout(EventBus uiEventBus, UserService userService) {
         this.uiEventBus = uiEventBus;
+        this.userService = userService;
+        logger.debug("Creating MainLayout {} for user {}", this, userService.getUserName());
         createHeader();
     }
 
     private void createHeader() {
         H1 logo = new H1("Math Pyramid");
         logo.addClassName("logo");
-        if (UI.getCurrent().getSession().getAttribute("username") == null) {
-            UI.getCurrent().getSession().setAttribute("username", UUID.randomUUID().toString().substring(0, 5));
-        }
-        H1 id = new H1("Name: " + UI.getCurrent().getSession().getAttribute("username"));
+        H1 id = new H1("Name: " + userService.getUserName());
         id.addClassName("id");
 
         Button newGame = new Button("New Game");
         newGame.addClickListener(event ->
-                uiEventBus.post(new NewGameEvent())
+                uiEventBus.post(new NewGameEvent(false))
         );
         Button newMultiplayerGame = new Button("New Multiplayer Game");
-        newMultiplayerGame.addClickListener(event -> uiEventBus.post(new NewMultiplayerGameEvent()));
+        newMultiplayerGame.addClickListener(event -> uiEventBus.post(new NewGameEvent(true)));
 
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, id, newMultiplayerGame, newGame);
         header.addClassName("header");
@@ -55,5 +56,10 @@ public class MainLayout extends AppLayout {
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
         addToNavbar(header);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        logger.debug("Detaching MainLayout {} for user {}", this, userService.getUserName());
     }
 }

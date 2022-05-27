@@ -194,6 +194,10 @@
                             tobiasgaenzler/math-pyramid
                         </image>
                     </to>
+                    <container>
+                        <appRoot>/app</appRoot>
+                        <ports>80</ports>
+                    </container>
                 </configuration>
             </plugin>
         </plugins>

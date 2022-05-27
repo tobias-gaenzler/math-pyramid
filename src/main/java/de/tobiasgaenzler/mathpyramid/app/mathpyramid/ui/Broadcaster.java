@@ -12,9 +12,9 @@ import java.util.function.Consumer;
 public class Broadcaster {
 
     private static final Logger logger = LoggerFactory.getLogger(Broadcaster.class);
-    static Executor executor = Executors.newSingleThreadExecutor();
+    static final Executor executor = Executors.newSingleThreadExecutor();
 
-    static LinkedList<Consumer<Object>> listeners = new LinkedList<>();
+    static final LinkedList<Consumer<Object>> listeners = new LinkedList<>();
 
     public static synchronized Registration register(
             Consumer<Object> listener) {

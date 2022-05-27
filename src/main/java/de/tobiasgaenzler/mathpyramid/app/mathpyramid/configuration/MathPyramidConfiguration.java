@@ -2,7 +2,7 @@ package de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix="mathpyramid")
+@ConfigurationProperties(prefix = "mathpyramid")
 public class MathPyramidConfiguration {
     public static final int DEFAULT_SIZE = 3;
     public static final int DEFAULT_MAX_VALUE = 100;

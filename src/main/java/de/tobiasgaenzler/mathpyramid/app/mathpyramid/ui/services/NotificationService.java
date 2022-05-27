@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Span;

@@ -2,7 +2,7 @@ package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
 
 import com.vaadin.flow.component.HasOrderedComponents;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.MathPyramidLayout;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.layouts.MathPyramidLayout;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

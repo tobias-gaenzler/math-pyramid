@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -8,7 +8,10 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModel;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModelFactory;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration.MathPyramidConfiguration;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.MathPyramidView;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.events.NewGameEvent;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.NotificationService;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,7 @@ public class MathPyramidViewPresenter implements MathPyramidViewListener {
 
     @Subscribe
     public void newGameEventReceived(NewGameEvent event) {
-        startGame(event.getMultiPlayer());
+        startGame(event.multiPlayer());
     }
 
     @Override

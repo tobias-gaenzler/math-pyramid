@@ -30,8 +30,7 @@ class MathPyramidCalculatorTest {
     public void testGetDifficultyForAllStartPositionsForPyramids(Integer size, Integer notSolvable, Integer easy, Integer hard) {
         Set<Set<Integer>> startPositions = getMathPyramidCombinations(size, size);
         List<Integer> difficulties = startPositions.stream()
-                .map(startValues -> new MathPyramidCalculator().getDifficulty(startValues, size))
-                .collect(Collectors.toList());
+                .map(startValues -> new MathPyramidCalculator().getDifficulty(startValues, size)).toList();
         int numberOfNotUniquelySolvable = (int) difficulties.stream().filter(Objects::isNull).count();
         assertThat(numberOfNotUniquelySolvable).isEqualTo(notSolvable); // not uniquely solvable
         Map<Integer, List<Integer>> groupedDifficulties = difficulties.stream().filter(Objects::nonNull).collect(groupingBy(d -> d));
@@ -59,7 +58,7 @@ class MathPyramidCalculatorTest {
     }
 
     // This method is not used in the application.
-    // Instead it is used in tests to document the distribution of not uniquely solvable, easy and difficult start positions
+    // Instead, it is used in tests to document the distribution of not uniquely solvable, easy and difficult start positions
     Set<Set<Integer>> getMathPyramidCombinations(int pyramidHeight, int numberOfPrefilledBlocks) {
         int numberOfBlocks = new MathPyramidCalculator().getNumberOfBlocks(pyramidHeight);
         Set<Integer> positionValues = IntStream.range(0, numberOfBlocks).boxed().collect(Collectors.toSet());

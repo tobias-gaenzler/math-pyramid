@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services;
 
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.stereotype.Service;

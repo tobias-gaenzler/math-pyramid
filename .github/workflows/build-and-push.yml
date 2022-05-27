@@ -30,4 +30,4 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build with Maven
-      run: mvn -B clean compile jib:build
+      run: mvn -B clean package jib:build

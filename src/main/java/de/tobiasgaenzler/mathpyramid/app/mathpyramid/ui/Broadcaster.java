@@ -16,8 +16,7 @@ public class Broadcaster {
 
     static final LinkedList<Consumer<Object>> listeners = new LinkedList<>();
 
-    public static synchronized Registration register(
-            Consumer<Object> listener) {
+    public static synchronized Registration register(Consumer<Object> listener) {
         listeners.add(listener);
 
         return () -> {

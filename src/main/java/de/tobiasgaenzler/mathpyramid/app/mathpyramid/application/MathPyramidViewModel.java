@@ -96,4 +96,14 @@ public class MathPyramidViewModel {
     public MathPyramidCalculator getCalculator() {
         return calculator;
     }
+
+    @Override
+    public String toString() {
+        return "MathPyramidViewModel{" +
+                "mathPyramidModel=" + mathPyramidModel +
+                ", userInput=" + userInput +
+                ", multiplayerGame=" + multiplayerGame +
+                ", multiplayerGameInProgress=" + multiplayerGameInProgress +
+                '}';
+    }
 }

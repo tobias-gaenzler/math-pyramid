@@ -53,7 +53,7 @@ public class MathPyramidVaadinView extends VerticalLayout implements MathPyramid
 
     @Override
     public void refreshView(MathPyramidViewModel model) {
-        logger.info("Refreshing view with model" + model);
+        logger.info("Refreshing view with model: " + model);
         this.model = model;
         removeAll();
         layout.init(this.model.getSize());

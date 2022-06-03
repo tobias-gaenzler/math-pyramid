@@ -27,4 +27,13 @@ public class MathPyramidModel {
     public List<Integer> getSolution() {
         return solution;
     }
+
+    @Override
+    public String toString() {
+        return "MathPyramidModel{" +
+                "size=" + size +
+                ", startValues=" + startValues +
+                ", solution=" + solution +
+                '}';
+    }
 }

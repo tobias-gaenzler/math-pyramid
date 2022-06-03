@@ -111,11 +111,12 @@ public class MathPyramidViewPresenter implements MathPyramidViewListener {
     }
 
     public void pyramidBlockChanged(int currentRow, int currentColumn, Integer inputValue) {
-        logger.debug("Received input row {}, column {}: inputValue {}, player {}",
+        logger.debug("Received input row {}, column {}: inputValue {}, player {}, model {}",
                 currentRow,
                 currentColumn,
                 inputValue,
-                userService.getUserName());
+                userService.getUserName(),
+                model);
         // store user input in model
         model.setUserInput(currentRow, currentColumn, inputValue);
         view.updatePyramidBlock(currentRow, currentColumn, isUserInputCorrect(currentRow, currentColumn));

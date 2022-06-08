@@ -39,6 +39,7 @@ public class MathPyramidVaadinView extends VerticalLayout implements MathPyramid
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
+        logger.debug("Registering UI {} in view {}", attachEvent.getUI(), this);
         presenter.register(attachEvent.getUI(), this);
         // start new game on first load only
         if (model == null) {
@@ -48,7 +49,8 @@ public class MathPyramidVaadinView extends VerticalLayout implements MathPyramid
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-        presenter.unregister();
+        logger.debug("Unregistering UI {} in view {}", detachEvent.getUI(), this);
+        presenter.unregister(getUI().orElse(null));
     }
 
     @Override

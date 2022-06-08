@@ -85,10 +85,6 @@ public class MathPyramidViewModel {
         return multiplayerGameInProgress;
     }
 
-    public void endMultiplayerGame() {
-        multiplayerGameInProgress = false;
-    }
-
     public void startMultiplayerGame() {
         multiplayerGameInProgress = true;
     }

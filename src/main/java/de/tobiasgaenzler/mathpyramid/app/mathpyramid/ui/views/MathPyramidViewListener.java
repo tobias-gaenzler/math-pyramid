@@ -7,7 +7,7 @@ public interface MathPyramidViewListener {
 
     void startGame(Boolean multiPlayerGame);
 
-    void unregister();
+    void unregister(UI ui);
 
     void pyramidBlockChanged(int currentRow, int currentColumn, Integer value);
 }

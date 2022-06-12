@@ -13,6 +13,6 @@ USER docker_user
 
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/target/*.jar ./application.jar
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["java","-jar","/usr/src/app/application.jar"]

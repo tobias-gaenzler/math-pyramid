@@ -28,9 +28,9 @@ public class Broadcaster implements Serializable {
         listeners.remove(ui);
     }
 
-    public synchronized void broadcast(Object message) {
+    public void broadcast(Object message) {
         logger.debug("Broadcasted message to {} listeners {}", listeners.size(), message);
-        listeners.forEach((key, value) -> executor.execute(() -> value.receiveBroadcast(key, message)));
+        listeners.forEach((ui, listener) -> executor.execute(() -> listener.receiveBroadcast(ui, message)));
     }
 
     public interface BroadcastListener {

@@ -1,6 +1,18 @@
-FROM tobiasgaenzler/math-pyramid
-# TODO: build image in this file instead of using prebuild docker image
-# TODO: execute with non-root user
+FROM maven:3.8.5-openjdk-18 as build
+
+WORKDIR /usr/src/app
+COPY . .
+
+# TODO: install chrome driver to run integration tests
+RUN mvn -B clean package -DskipTests
+
+FROM openjdk:18-slim
+
+RUN useradd docker_user
+USER docker_user
+
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/target/*.jar ./application.jar
 EXPOSE 80
 
-ENTRYPOINT ["java","-cp","@/app/jib-classpath-file","de.tobiasgaenzler.mathpyramid.MathPyramidApplication"]
+ENTRYPOINT ["java","-jar","/usr/src/app/application.jar"]

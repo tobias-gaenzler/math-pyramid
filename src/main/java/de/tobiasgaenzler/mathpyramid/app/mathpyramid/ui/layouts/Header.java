@@ -1,13 +1,14 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.layouts;
 
 import com.google.common.eventbus.EventBus;
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.events.NewGameEvent;
@@ -19,7 +20,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 
 @SpringComponent
 @UIScope
-public class Header extends HorizontalLayout {
+public class Header extends HorizontalLayout implements BeforeEnterObserver {
 
     private final EventBus uiEventBus;
 
@@ -28,25 +29,19 @@ public class Header extends HorizontalLayout {
         setWidth("100%");
         setDefaultVerticalComponentAlignment(CENTER);
         this.uiEventBus = uiEventBus;
-    }
-
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        removeAll();
-        addLogo();
-        addButtons(uiEventBus);
         addClassName("header");
     }
 
-    private void addButtons(EventBus uiEventBus) {
-        AtomicReference<String> segment = new AtomicReference<>("");
-        getUI().ifPresent(ui ->
-                segment.set(ui.getInternals().getActiveViewLocation().getFirstSegment())
-        );
-        // no buttons on help view
-        if (segment.get().equals("help")) {
-            return;
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        removeAll();
+        addLogo();
+        if (!event.getNavigationTarget().getSimpleName().equalsIgnoreCase("HelpView")) {
+            addButtons(uiEventBus);
         }
+    }
+
+    private void addButtons(EventBus uiEventBus) {
         HorizontalLayout buttonsLayout = new HorizontalLayout();
         buttonsLayout.setAlignItems(Alignment.END);
 

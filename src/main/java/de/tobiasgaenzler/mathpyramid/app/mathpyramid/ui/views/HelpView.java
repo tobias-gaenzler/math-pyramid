@@ -21,19 +21,20 @@ public class HelpView extends VerticalLayout {
         addClassName("help");
 
         addTitle();
-
         addRules();
-
         addImages();
-
         addLinks();
     }
 
     private void addLinks() {
         VerticalLayout linkList = new VerticalLayout();
         linkList.add(new H5("Links"));
-        linkList.add(new Anchor("https://www.youtube.com/watch?v=oLcpiQYtwYg", new ListItem("Tutorial (english)")));
-        linkList.add(new Anchor("https://www.youtube.com/watch?v=PMCsU79CI30", new ListItem("Tutorial (german)")));
+        Anchor englishLink = new Anchor("https://www.youtube.com/watch?v=oLcpiQYtwYg", new ListItem("Tutorial (englishLink)"));
+        englishLink.setTarget("_blank");
+        linkList.add(englishLink);
+        Anchor germanLink = new Anchor("https://www.youtube.com/watch?v=PMCsU79CI30", new ListItem("Tutorial (german)"));
+        germanLink.setTarget("_blank");
+        linkList.add(germanLink);
         linkList.setAlignItems(CENTER);
         add(linkList);
     }

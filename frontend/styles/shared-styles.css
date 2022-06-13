@@ -1,15 +1,21 @@
 .header {
     padding: 0 var(--lumo-space-m);
 }
-
-.header h1.logo, .header h1.id {
+.header .logo-layout {
+    padding: 0;
+}
+.header .logo {
     font-size: 1em;
-    margin: var(--lumo-space-m);
+    font-weight: bold;
 }
 
 
 /* center pyramid and pyramid rows vertically */
 .app-layout .mathpyramid-layout, .app-layout .mathpyramid-layout .row {
     margin: 1em auto;
+}
+
+.help .image-layout iron-icon {
+    margin: auto 4em auto 4em;
 }
 

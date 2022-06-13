@@ -39,7 +39,8 @@ public class HelpView extends VerticalLayout {
     }
 
     private void addImages() {
-        HorizontalLayout imageLayout = new HorizontalLayout();
+        VerticalLayout imageLayout = new VerticalLayout();
+        imageLayout.setAlignItems(CENTER);
         imageLayout.addClassName("image-layout");
         StreamResource helpStartImageResource = new StreamResource("help_start.jpg",
                 () -> getClass().getResourceAsStream("/images/help_start.jpg"));
@@ -47,7 +48,7 @@ public class HelpView extends VerticalLayout {
         helpStartImage.setMaxWidth(25, Unit.EM);
         imageLayout.add(helpStartImage);
 
-        Icon icon = new Icon("arrow-right");
+        Icon icon = new Icon("arrow-down");
         imageLayout.add(icon);
 
         StreamResource helpFinishImageResource = new StreamResource("help_finished.jpg",

@@ -14,8 +14,6 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.events.NewGameEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
 @SpringComponent
@@ -36,12 +34,26 @@ public class Header extends HorizontalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         removeAll();
         addLogo();
-        if (!event.getNavigationTarget().getSimpleName().equalsIgnoreCase("HelpView")) {
-            addButtons(uiEventBus);
+        if (event.getNavigationTarget().getSimpleName().equalsIgnoreCase("HelpView")) {
+            addHelpButton();
+        } else {
+            addAllButtons(uiEventBus);
         }
     }
 
-    private void addButtons(EventBus uiEventBus) {
+    private void addHelpButton() {
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+        buttonsLayout.setAlignItems(Alignment.END);
+
+        Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
+        helpButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        helpButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("help")));
+        buttonsLayout.add(helpButton);
+
+        add(buttonsLayout);
+    }
+
+    private void addAllButtons(EventBus uiEventBus) {
         HorizontalLayout buttonsLayout = new HorizontalLayout();
         buttonsLayout.setAlignItems(Alignment.END);
 

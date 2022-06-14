@@ -12,6 +12,9 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.events.NewGameEvent;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.HelpView;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.training.TrainingVaadinView;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.training.TrainingView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
@@ -34,43 +37,35 @@ public class Header extends HorizontalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         removeAll();
         addLogo();
-        if (event.getNavigationTarget().getSimpleName().equalsIgnoreCase("HelpView")) {
-            addHelpButton();
-        } else {
-            addAllButtons(uiEventBus);
-        }
-    }
-
-    private void addHelpButton() {
         HorizontalLayout buttonsLayout = new HorizontalLayout();
         buttonsLayout.setAlignItems(Alignment.END);
-
-        Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
-        helpButton.addThemeVariants(ButtonVariant.LUMO_ICON);
-        helpButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("help")));
-        buttonsLayout.add(helpButton);
-
+        if (event.getNavigationTarget().equals(HelpView.class)
+                || event.getNavigationTarget().equals(TrainingVaadinView.class)) {
+            addHelpAndTrainingButtons(buttonsLayout);
+        } else {
+            addAllButtons(uiEventBus, buttonsLayout);
+        }
         add(buttonsLayout);
     }
 
-    private void addAllButtons(EventBus uiEventBus) {
-        HorizontalLayout buttonsLayout = new HorizontalLayout();
-        buttonsLayout.setAlignItems(Alignment.END);
-
+    private void addAllButtons(EventBus uiEventBus, HorizontalLayout buttonsLayout) {
         Button startMultiplayerGameButton = new Button("Start Multiplayer Game");
         startMultiplayerGameButton.addClickListener(event -> uiEventBus.post(new NewGameEvent(true)));
         buttonsLayout.add(startMultiplayerGameButton);
 
-        Button startNewGameButton = new Button("Start Game");
-        startNewGameButton.addClickListener(event -> uiEventBus.post(new NewGameEvent(false)));
-        buttonsLayout.add(startNewGameButton);
+        addHelpAndTrainingButtons(buttonsLayout);
+
+    }
+
+    private void addHelpAndTrainingButtons(HorizontalLayout buttonsLayout) {
+        Button trainingButton = new Button("Start Game (Practice)");
+        trainingButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("training")));
+        buttonsLayout.add(trainingButton);
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_ICON);
         helpButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("help")));
         buttonsLayout.add(helpButton);
-
-        add(buttonsLayout);
     }
 
     private void addLogo() {

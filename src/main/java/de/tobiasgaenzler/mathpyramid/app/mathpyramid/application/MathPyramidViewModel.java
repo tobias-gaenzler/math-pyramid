@@ -93,6 +93,24 @@ public class MathPyramidViewModel {
         return calculator;
     }
 
+    public boolean isSolved() {
+        for (int row = 0; row < getSize(); row++) {
+            for (int column = 0; column < getSize() - row; column++) {
+                if (isUserInput(row, column) && !isUserInputCorrect(row, column)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean isUserInputCorrect(Integer row, Integer column) {
+        getCalculator().checkDimensions(row, column, getSize());
+        Integer inputValue = getUserInput(row, column);
+        Integer solutionValue = getSolutionAt(row, column);
+        return solutionValue.equals(inputValue);
+    }
+
     @Override
     public String toString() {
         return "MathPyramidViewModel{" +

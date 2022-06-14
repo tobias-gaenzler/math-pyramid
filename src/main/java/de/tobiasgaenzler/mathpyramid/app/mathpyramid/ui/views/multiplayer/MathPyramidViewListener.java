@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.multiplayer;
 
 import com.vaadin.flow.component.UI;
 

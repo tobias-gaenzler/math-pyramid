@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.multiplayer;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -105,29 +105,9 @@ public class MathPyramidViewPresenter implements MathPyramidViewListener {
         logger.debug("Received input row {}, column {}: inputValue {}, player {}, model {}", currentRow, currentColumn, inputValue, userService.getUserName(), model);
         // store user input in model
         model.setUserInput(currentRow, currentColumn, inputValue);
-        view.updatePyramidBlock(currentRow, currentColumn, isUserInputCorrect(currentRow, currentColumn));
-        if (isSolved()) {
+        view.updatePyramidBlock(currentRow, currentColumn, model.isUserInputCorrect(currentRow, currentColumn));
+        if (model.isSolved()) {
             gameFinished();
         }
     }
-
-    private boolean isSolved() {
-        for (int row = 0; row < model.getSize(); row++) {
-            for (int column = 0; column < model.getSize() - row; column++) {
-                if (model.isUserInput(row, column) && !isUserInputCorrect(row, column)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean isUserInputCorrect(Integer row, Integer column) {
-        model.getCalculator().checkDimensions(row, column, model.getSize());
-        Integer inputValue = model.getUserInput(row, column);
-        Integer solutionValue = model.getSolutionAt(row, column);
-        return solutionValue.equals(inputValue);
-    }
-
-
 }

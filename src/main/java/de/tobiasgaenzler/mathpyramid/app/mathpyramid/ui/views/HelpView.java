@@ -3,7 +3,6 @@ package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -13,7 +12,7 @@ import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.layouts.MainLayout;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
 @Route(value = "help", layout = MainLayout.class)
-@PageTitle("Help")
+@PageTitle("Math Pyramid - Help")
 public class HelpView extends VerticalLayout {
 
     public HelpView() {

@@ -28,7 +28,7 @@ public class HelpView extends VerticalLayout {
     private void addLinks() {
         VerticalLayout linkList = new VerticalLayout();
         linkList.add(new H5("Links"));
-        Anchor englishLink = new Anchor("https://www.youtube.com/watch?v=oLcpiQYtwYg", new ListItem("Tutorial (englishLink)"));
+        Anchor englishLink = new Anchor("https://www.youtube.com/watch?v=oLcpiQYtwYg", new ListItem("Tutorial (english)"));
         englishLink.setTarget("_blank");
         linkList.add(englishLink);
         Anchor germanLink = new Anchor("https://www.youtube.com/watch?v=PMCsU79CI30", new ListItem("Tutorial (german)"));
@@ -67,7 +67,7 @@ public class HelpView extends VerticalLayout {
     }
 
     private void addTitle() {
-        H3 title = new H3("How to play Math-Pyramid?");
+        H3 title = new H3("How to play Math Pyramid?");
         add(title);
     }
 }

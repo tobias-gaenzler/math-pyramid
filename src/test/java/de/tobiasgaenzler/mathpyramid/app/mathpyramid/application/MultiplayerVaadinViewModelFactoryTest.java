@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-class MathPyramidVaadinViewModelFactoryTest {
+class MultiplayerVaadinViewModelFactoryTest {
 
     @ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, -1, 0, 1, 2, 11, Integer.MAX_VALUE})

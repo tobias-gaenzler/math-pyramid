@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.training;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.practice;
 
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,22 +18,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
-@Route(value = "training", layout = MainLayout.class)
+@Route(value = "practice", layout = MainLayout.class)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
-@PageTitle("Math Pyramid - Training")
-public class TrainingVaadinView extends VerticalLayout implements TrainingView, BeforeEnterObserver {
+@PageTitle("Math Pyramid - Practice")
+public class PracticeVaadinView extends VerticalLayout implements PracticeView, BeforeEnterObserver {
 
-    private final Logger logger = LoggerFactory.getLogger(TrainingVaadinView.class);
+    private final Logger logger = LoggerFactory.getLogger(PracticeVaadinView.class);
     private final MathPyramidLayout layout;
-    private final TrainingViewListener presenter;
+    private final PracticeViewListener presenter;
     private MathPyramidViewModel model;
 
     @Autowired
-    public TrainingVaadinView(MathPyramidLayout layout, TrainingViewListener presenter) {
+    public PracticeVaadinView(MathPyramidLayout layout, PracticeViewListener presenter) {
         this.layout = layout;
         this.presenter = presenter;
         addClassName("app-layout");
-        logger.debug("Initializing new TrainingVaadinView");
+        logger.debug("Initializing new PracticeVaadinView");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class TrainingVaadinView extends VerticalLayout implements TrainingView, 
 
     @Override
     public void refreshView(MathPyramidViewModel model) {
-        logger.info("Refreshing training view with model: " + model);
+        logger.info("Refreshing practice view with model: " + model);
         this.model = model;
         removeAll();
         layout.init(this.model.getSize());

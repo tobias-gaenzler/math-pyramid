@@ -1,10 +1,11 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.multiplayer;
 
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -18,32 +19,31 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
-@Route(value = "", layout = MainLayout.class) // use this view as default view ("/"), set this as content in MainLayout
+@Route(value = "multiplayer", layout = MainLayout.class)
+// use this view as default view ("/"), set this as content in MainLayout
 // Local styles for text fields (can style shadow dom, parts, ...)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @PageTitle("Math-Pyramid")
-public class MathPyramidVaadinView extends VerticalLayout implements MathPyramidView {
+public class MultiplayerVaadinView extends VerticalLayout implements MultiplayerView, BeforeEnterObserver {
 
-    private final Logger logger = LoggerFactory.getLogger(MathPyramidVaadinView.class);
+    private final Logger logger = LoggerFactory.getLogger(MultiplayerVaadinView.class);
     private final MathPyramidLayout layout;
-    private final MathPyramidViewListener presenter;
+    private final MultiplayerViewListener presenter;
     private MathPyramidViewModel model;
 
     @Autowired
-    public MathPyramidVaadinView(MathPyramidLayout layout, MathPyramidViewPresenter presenter) {
+    public MultiplayerVaadinView(MathPyramidLayout layout, MultiplayerViewPresenter presenter) {
         this.layout = layout;
         this.presenter = presenter;
         addClassName("app-layout");
         logger.debug("Initializing new MathPyramidView");
     }
 
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        logger.debug("Registering UI {} in view {}", attachEvent.getUI(), this);
-        presenter.register(attachEvent.getUI(), this);
-        // start new game on first load only
-        if (model == null) {
-            presenter.startGame(false);
+    public void beforeEnter(BeforeEnterEvent event) {
+        logger.debug("Before enter multiplayer view: UI {}, view {}", event.getUI(), this);
+        if (presenter != null) {
+            presenter.register(event.getUI(), this);
+            presenter.startGame();
         }
     }
 

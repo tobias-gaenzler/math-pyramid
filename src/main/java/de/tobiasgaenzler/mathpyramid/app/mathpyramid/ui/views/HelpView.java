@@ -11,7 +11,7 @@ import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.layouts.MainLayout;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
-@Route(value = "help", layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
 @PageTitle("Math Pyramid - Help")
 public class HelpView extends VerticalLayout {
 

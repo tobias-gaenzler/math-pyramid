@@ -1,14 +1,11 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.multiplayer;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.spring.annotation.UIScope;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModel;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModelFactory;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration.MathPyramidConfiguration;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.events.NewGameEvent;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.NotificationService;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.UserService;
 import org.slf4j.Logger;
@@ -19,50 +16,44 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
-public class MathPyramidViewPresenter implements MathPyramidViewListener {
+public class MultiplayerViewPresenter implements MultiplayerViewListener {
     private final MathPyramidConfiguration config;
-    private final Logger logger = LoggerFactory.getLogger(MathPyramidViewPresenter.class);
+    private final Logger logger = LoggerFactory.getLogger(MultiplayerViewPresenter.class);
     private final MathPyramidViewModelFactory factory;
     private final NotificationService notificationService;
     private final UserService userService;
     private final Broadcaster broadcaster;
     private MathPyramidViewModel model;
-    private MathPyramidView view;
+    private MultiplayerView view;
 
     @Autowired
-    public MathPyramidViewPresenter(MathPyramidConfiguration config, MathPyramidViewModelFactory factory, EventBus uiEventBus, NotificationService notificationService, UserService userService, Broadcaster broadcaster) {
+    public MultiplayerViewPresenter(MathPyramidConfiguration config,
+                                    MathPyramidViewModelFactory factory,
+                                    NotificationService notificationService,
+                                    UserService userService,
+                                    Broadcaster broadcaster) {
         this.config = config;
         this.factory = factory;
         this.notificationService = notificationService;
         this.userService = userService;
         this.broadcaster = broadcaster;
-        createModel(false);
-        uiEventBus.register(this);
-    }
-
-    @Subscribe
-    public void newGameEventReceived(NewGameEvent event) {
-        startGame(event.multiPlayer());
+        createModel();
     }
 
     @Override
-    public void startGame(Boolean multiPlayerGame) {
-        logger.info("New game started by player {}, multiplayer: {}", userService.getUserName(), multiPlayerGame);
-        createModel(multiPlayerGame);
-        if (multiPlayerGame) {
-            model.startMultiplayerGame();
-            broadcaster.broadcast(model);
-        } else {
-            view.refreshView(this.model);
-        }
+    public void startGame() {
+        logger.info("New multiplayer game started by player {}, ", userService.getUserName());
+        createModel();
+        model.startMultiplayerGame();
+        broadcaster.broadcast(model);
     }
 
     public void unregister(UI ui) {
         broadcaster.unregister(ui);
     }
 
-    public void register(UI ui, MathPyramidView mathPyramidView) {
-        view = mathPyramidView;
+    public void register(UI ui, MultiplayerView multiplayerView) {
+        view = multiplayerView;
         unregister(ui);
         broadcaster.register(ui, this::broadcastListener);
     }
@@ -85,10 +76,10 @@ public class MathPyramidViewPresenter implements MathPyramidViewListener {
         });
     }
 
-    private void createModel(boolean multiplayer) {
-        logger.info("Creating new model, multiplayer: {}, player: {}", multiplayer, userService.getUserName());
+    private void createModel() {
+        logger.info("Creating new multiplayer model for player: {}", userService.getUserName());
         model = factory.create(config.getDefaultSize(), config.getMaxValue());
-        model.setMultiplayerGame(multiplayer);
+        model.setMultiplayerGame(true);
     }
 
     public void gameFinished() {

@@ -26,15 +26,15 @@ class IntegrationTest {
 
     @Test
     void testMathPyramidLoads(@Arguments("--headless") ChromeDriver driver) {
-        driver.get("http://localhost:" + randomApplicationPort);
+        driver.get("http://localhost:" + randomApplicationPort + "/practice");
         waitForApplicationAvailable(driver);
         assertThat(driver.getTitle())
-                .contains("Math-Pyramid");
+                .contains("Math Pyramid");
     }
 
     @Test
     void testMathPyramidCanBeSolved(@Arguments("--headless") ChromeDriver driver) {
-        driver.get("http://localhost:" + randomApplicationPort);
+        driver.get("http://localhost:" + randomApplicationPort + "/practice");
         waitForApplicationAvailable(driver);
 
         // find plain dom text fields

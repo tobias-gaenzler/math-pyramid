@@ -1,11 +1,8 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.multiplayer;
 
-import com.vaadin.flow.component.UI;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModel;
 
-import java.util.Optional;
-
-public interface MathPyramidView {
+public interface MultiplayerView {
     void refreshView(MathPyramidViewModel model);
     void updatePyramidBlock(int currentRow, int currentColumn, boolean blockSolved);
 }

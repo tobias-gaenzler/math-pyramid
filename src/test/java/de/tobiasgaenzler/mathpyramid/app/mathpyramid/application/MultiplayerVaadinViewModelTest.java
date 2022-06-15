@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class MathPyramidVaadinViewModelTest {
+class MultiplayerVaadinViewModelTest {
 
     @Test
     public void testThatOnlyWritableBlocksCanBeSet() {

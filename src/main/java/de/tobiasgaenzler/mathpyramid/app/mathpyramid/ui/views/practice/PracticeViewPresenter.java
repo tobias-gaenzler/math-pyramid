@@ -1,4 +1,4 @@
-package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.training;
+package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.practice;
 
 import com.vaadin.flow.spring.annotation.UIScope;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModel;
@@ -13,17 +13,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
-public class TrainingViewPresenter implements TrainingViewListener {
+public class PracticeViewPresenter implements PracticeViewListener {
     private final MathPyramidConfiguration config;
-    private final Logger logger = LoggerFactory.getLogger(TrainingViewPresenter.class);
+    private final Logger logger = LoggerFactory.getLogger(PracticeViewPresenter.class);
     private final MathPyramidViewModelFactory factory;
     private final NotificationService notificationService;
     private final UserService userService;
     private MathPyramidViewModel model;
-    private TrainingView view;
+    private PracticeView view;
 
     @Autowired
-    public TrainingViewPresenter(MathPyramidConfiguration config, MathPyramidViewModelFactory factory, NotificationService notificationService, UserService userService) {
+    public PracticeViewPresenter(MathPyramidConfiguration config, MathPyramidViewModelFactory factory, NotificationService notificationService, UserService userService) {
         this.config = config;
         this.factory = factory;
         this.notificationService = notificationService;
@@ -33,14 +33,14 @@ public class TrainingViewPresenter implements TrainingViewListener {
 
     @Override
     public void startGame() {
-        logger.info("New training started by player {}", userService.getUserName());
+        logger.info("New practice started by player {}", userService.getUserName());
         createModel();
         view.refreshView(this.model);
     }
 
     @Override
-    public void setView(TrainingView trainingView) {
-        view = trainingView;
+    public void setView(PracticeView practiceView) {
+        view = practiceView;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class TrainingViewPresenter implements TrainingViewListener {
     }
 
     public void gameFinished() {
-        logger.info("Training finished by player {}", userService.getUserName());
+        logger.info("Practice finished by player {}", userService.getUserName());
         notificationService.createNotification("Solved! Congratulations!").open();
     }
 }

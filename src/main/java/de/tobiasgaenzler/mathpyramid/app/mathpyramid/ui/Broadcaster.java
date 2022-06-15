@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -17,14 +18,14 @@ public class Broadcaster implements Serializable {
     private final Logger logger = LoggerFactory.getLogger(Broadcaster.class);
     private final Executor executor = Executors.newSingleThreadExecutor();
 
-    private final Map<UI, BroadcastListener> listeners = new WeakHashMap<>();
+    private final Map<UI, BroadcastListener> listeners = new ConcurrentHashMap<>();
 
-    public synchronized void register(UI ui, BroadcastListener listener) {
+    public void register(UI ui, BroadcastListener listener) {
         logger.debug("registering listener {} for UI {}", listener, ui);
         listeners.put(ui, listener);
     }
 
-    public synchronized void unregister(UI ui) {
+    public void unregister(UI ui) {
         listeners.remove(ui);
     }
 

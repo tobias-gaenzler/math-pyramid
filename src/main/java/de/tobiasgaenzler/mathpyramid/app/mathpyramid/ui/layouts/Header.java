@@ -1,6 +1,5 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.layouts;
 
-import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -11,10 +10,9 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.events.NewGameEvent;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.HelpView;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.training.TrainingVaadinView;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.training.TrainingView;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.multiplayer.MultiplayerVaadinView;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.practice.PracticeVaadinView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
@@ -23,13 +21,10 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 @UIScope
 public class Header extends HorizontalLayout implements BeforeEnterObserver {
 
-    private final EventBus uiEventBus;
-
     @Autowired
-    public Header(EventBus uiEventBus) {
+    public Header() {
         setWidth("100%");
         setDefaultVerticalComponentAlignment(CENTER);
-        this.uiEventBus = uiEventBus;
         addClassName("header");
     }
 
@@ -39,32 +34,22 @@ public class Header extends HorizontalLayout implements BeforeEnterObserver {
         addLogo();
         HorizontalLayout buttonsLayout = new HorizontalLayout();
         buttonsLayout.setAlignItems(Alignment.END);
-        if (event.getNavigationTarget().equals(HelpView.class)
-                || event.getNavigationTarget().equals(TrainingVaadinView.class)) {
-            addHelpAndTrainingButtons(buttonsLayout);
-        } else {
-            addAllButtons(uiEventBus, buttonsLayout);
-        }
+        addNavigationButtons(buttonsLayout);
         add(buttonsLayout);
     }
 
-    private void addAllButtons(EventBus uiEventBus, HorizontalLayout buttonsLayout) {
+    private void addNavigationButtons(HorizontalLayout buttonsLayout) {
         Button startMultiplayerGameButton = new Button("Start Multiplayer Game");
-        startMultiplayerGameButton.addClickListener(event -> uiEventBus.post(new NewGameEvent(true)));
+        startMultiplayerGameButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate(MultiplayerVaadinView.class)));
         buttonsLayout.add(startMultiplayerGameButton);
 
-        addHelpAndTrainingButtons(buttonsLayout);
-
-    }
-
-    private void addHelpAndTrainingButtons(HorizontalLayout buttonsLayout) {
-        Button trainingButton = new Button("Start Game (Practice)");
-        trainingButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("training")));
-        buttonsLayout.add(trainingButton);
+        Button practiceButton = new Button("Start Game (Practice)");
+        practiceButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate(PracticeVaadinView.class)));
+        buttonsLayout.add(practiceButton);
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_ICON);
-        helpButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("help")));
+        helpButton.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate(HelpView.class)));
         buttonsLayout.add(helpButton);
     }
 

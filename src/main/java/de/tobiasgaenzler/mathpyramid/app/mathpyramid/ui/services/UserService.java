@@ -19,12 +19,13 @@ public class UserService {
     public String getUserName() {
         if (userName == null) {
             userName = NAMES.get(new Random().nextInt(NAMES.size()));
-            logger.info("Assigning new username {}", userName);
+            logger.info("Assigning new random username {}", userName);
         }
         return userName;
     }
 
     public void setUserName(String userName) {
+        logger.info("Assigning new  username {}", userName);
         this.userName = userName;
     }
 }

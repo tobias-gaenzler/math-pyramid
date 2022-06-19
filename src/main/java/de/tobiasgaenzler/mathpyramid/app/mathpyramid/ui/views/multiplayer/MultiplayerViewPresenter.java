@@ -6,7 +6,7 @@ import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidView
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModelFactory;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration.MathPyramidConfiguration;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.Broadcaster;
-import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.NotificationService;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.TimerService;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,24 +20,34 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
     private final MathPyramidConfiguration config;
     private final Logger logger = LoggerFactory.getLogger(MultiplayerViewPresenter.class);
     private final MathPyramidViewModelFactory factory;
-    private final NotificationService notificationService;
     private final UserService userService;
     private final Broadcaster broadcaster;
     private MathPyramidViewModel model;
     private MultiplayerView view;
+    private final TimerService timerService;
 
     @Autowired
     public MultiplayerViewPresenter(MathPyramidConfiguration config,
                                     MathPyramidViewModelFactory factory,
-                                    NotificationService notificationService,
                                     UserService userService,
-                                    Broadcaster broadcaster) {
+                                    Broadcaster broadcaster,
+                                    TimerService timerService) {
         this.config = config;
         this.factory = factory;
-        this.notificationService = notificationService;
         this.userService = userService;
         this.broadcaster = broadcaster;
+        this.timerService = timerService;
         createModel();
+    }
+
+    public void register(UI ui, MultiplayerView multiplayerView) {
+        view = multiplayerView;
+        unregister(ui);
+        broadcaster.register(ui, this::broadcastListener);
+    }
+
+    public void unregister(UI ui) {
+        broadcaster.unregister(ui);
     }
 
     @Override
@@ -48,14 +58,19 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
         broadcaster.broadcast(model);
     }
 
-    public void unregister(UI ui) {
-        broadcaster.unregister(ui);
+    public void gameFinished() {
+        logger.info("Multiplayer game finished by player {}", userService.getUserName());
+        broadcaster.broadcast("Solved by " + userService.getUserName() + " in " + timerService.getGameDuration());
     }
 
-    public void register(UI ui, MultiplayerView multiplayerView) {
-        view = multiplayerView;
-        unregister(ui);
-        broadcaster.register(ui, this::broadcastListener);
+    public void pyramidBlockChanged(int currentRow, int currentColumn, Integer inputValue) {
+        logger.debug("Received input row {}, column {}: inputValue {}, player {}, model {}", currentRow, currentColumn, inputValue, userService.getUserName(), model);
+        // store user input in model
+        model.setUserInput(currentRow, currentColumn, inputValue);
+        view.updatePyramidBlock(currentRow, currentColumn, model.isUserInputCorrect(currentRow, currentColumn));
+        if (model.isSolved()) {
+            gameFinished();
+        }
     }
 
     private void broadcastListener(UI ui, Object message) {
@@ -68,6 +83,7 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
             if (message instanceof MathPyramidViewModel) {
                 model = new MathPyramidViewModel(((MathPyramidViewModel) message));
                 view.refreshView(model);
+                timerService.startGame();
             } else {
                 if (model.getMultiplayerGame() && model.isMultiplayerGameInProgress()) {
                     view.addSolvedMessage((String) message);
@@ -80,25 +96,5 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
         logger.info("Creating new multiplayer model for player: {}", userService.getUserName());
         model = factory.create(config.getDefaultSize(), config.getMaxValue());
         model.setMultiplayerGame(true);
-    }
-
-    public void gameFinished() {
-        if (model.getMultiplayerGame()) {
-            logger.info("Multiplayer game finished by player {}", userService.getUserName());
-            broadcaster.broadcast("Solved by " + userService.getUserName());
-        } else {
-            logger.info("Single player game finished by player {}", userService.getUserName());
-            notificationService.createNotification("Solved! Congratulations!").open();
-        }
-    }
-
-    public void pyramidBlockChanged(int currentRow, int currentColumn, Integer inputValue) {
-        logger.debug("Received input row {}, column {}: inputValue {}, player {}, model {}", currentRow, currentColumn, inputValue, userService.getUserName(), model);
-        // store user input in model
-        model.setUserInput(currentRow, currentColumn, inputValue);
-        view.updatePyramidBlock(currentRow, currentColumn, model.isUserInputCorrect(currentRow, currentColumn));
-        if (model.isSolved()) {
-            gameFinished();
-        }
     }
 }

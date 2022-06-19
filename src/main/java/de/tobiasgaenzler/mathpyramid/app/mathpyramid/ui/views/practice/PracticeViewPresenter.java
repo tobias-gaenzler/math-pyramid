@@ -5,6 +5,7 @@ import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidView
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidViewModelFactory;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration.MathPyramidConfiguration;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.NotificationService;
+import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.TimerService;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +22,19 @@ public class PracticeViewPresenter implements PracticeViewListener {
     private final UserService userService;
     private MathPyramidViewModel model;
     private PracticeView view;
+    private final TimerService timerService;
 
     @Autowired
-    public PracticeViewPresenter(MathPyramidConfiguration config, MathPyramidViewModelFactory factory, NotificationService notificationService, UserService userService) {
+    public PracticeViewPresenter(MathPyramidConfiguration config,
+                                 MathPyramidViewModelFactory factory,
+                                 NotificationService notificationService,
+                                 UserService userService,
+                                 TimerService timerService) {
         this.config = config;
         this.factory = factory;
         this.notificationService = notificationService;
         this.userService = userService;
+        this.timerService = timerService;
         createModel();
     }
 
@@ -36,6 +43,7 @@ public class PracticeViewPresenter implements PracticeViewListener {
         logger.info("New practice started by player {}", userService.getUserName());
         createModel();
         view.refreshView(this.model);
+        timerService.startGame();
     }
 
     @Override
@@ -62,6 +70,8 @@ public class PracticeViewPresenter implements PracticeViewListener {
 
     public void gameFinished() {
         logger.info("Practice finished by player {}", userService.getUserName());
-        notificationService.createNotification("Solved! Congratulations!").open();
+        notificationService.createNotification("Congratulations! Solved in " +
+                        timerService.getGameDuration() + ".")
+                .open();
     }
 }

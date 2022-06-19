@@ -85,7 +85,7 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
                 view.refreshView(model);
                 timerService.startGame();
             } else {
-                if (model.getMultiplayerGame() && model.isMultiplayerGameInProgress()) {
+                if (model.isMultiplayerGameInProgress()) {
                     view.addSolvedMessage((String) message);
                 }
             }
@@ -95,6 +95,5 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
     private void createModel() {
         logger.info("Creating new multiplayer model for player: {}", userService.getUserName());
         model = factory.create(config.getDefaultSize(), config.getMaxValue());
-        model.setMultiplayerGame(true);
     }
 }

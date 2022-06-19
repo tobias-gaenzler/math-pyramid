@@ -73,14 +73,6 @@ public class MathPyramidViewModel {
         return calculator.getIndex(row, column, size);
     }
 
-    public boolean getMultiplayerGame() {
-        return multiplayerGame;
-    }
-
-    public void setMultiplayerGame(boolean multiplayerGame) {
-        this.multiplayerGame = multiplayerGame;
-    }
-
     public boolean isMultiplayerGameInProgress() {
         return multiplayerGameInProgress;
     }

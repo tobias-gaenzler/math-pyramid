@@ -65,7 +65,6 @@ public class PracticeViewPresenter implements PracticeViewListener {
     private void createModel() {
         logger.info("Creating new model, player: {}", userService.getUserName());
         model = factory.create(config.getDefaultSize(), config.getMaxValue());
-        model.setMultiplayerGame(false);
     }
 
     public void gameFinished() {

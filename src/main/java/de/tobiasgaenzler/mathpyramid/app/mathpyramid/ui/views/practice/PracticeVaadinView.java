@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @UIScope
 @Route(value = "practice", layout = MainLayout.class)
-@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @PageTitle("Math Pyramid - Practice")
 public class PracticeVaadinView extends VerticalLayout implements PracticeView, BeforeEnterObserver {
 

@@ -1,7 +1,7 @@
 package de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.views.multiplayer;
 
 import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
+
 @Component
 @UIScope
 @Route(value = "multiplayer", layout = MainLayout.class)
-// Local styles for text fields (can style shadow dom, parts, ...)
-@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @PageTitle("Math-Pyramid")
 public class MultiplayerVaadinView extends VerticalLayout implements MultiplayerView, BeforeEnterObserver {
 
@@ -29,6 +29,7 @@ public class MultiplayerVaadinView extends VerticalLayout implements Multiplayer
     private final MathPyramidLayout layout;
     private final MultiplayerViewListener presenter;
     private MathPyramidViewModel model;
+    private final VerticalLayout solvedByLayout;
 
     @Autowired
     public MultiplayerVaadinView(MathPyramidLayout layout, MultiplayerViewPresenter presenter) {
@@ -36,6 +37,8 @@ public class MultiplayerVaadinView extends VerticalLayout implements Multiplayer
         this.presenter = presenter;
         addClassName("app-layout");
         logger.debug("Initializing new MathPyramidView");
+        solvedByLayout = new VerticalLayout();
+        solvedByLayout.setAlignItems(CENTER);
     }
 
     public void beforeEnter(BeforeEnterEvent event) {
@@ -57,12 +60,14 @@ public class MultiplayerVaadinView extends VerticalLayout implements Multiplayer
         logger.info("Refreshing view with model: " + model);
         this.model = model;
         removeAll();
+        solvedByLayout.removeAll();
         layout.init(this.model.getSize());
         add(layout);
-        bind();
+        bindPyramidBlocks();
+        add(solvedByLayout);
     }
 
-    private void bind() {
+    private void bindPyramidBlocks() {
         int size = model.getSize();
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size - row; column++) {
@@ -97,6 +102,11 @@ public class MultiplayerVaadinView extends VerticalLayout implements Multiplayer
         } else if (input != null) {
             textField.addClassName("incorrect");
         }
+    }
+
+    @Override
+    public void addSolvedMessage(String message) {
+        solvedByLayout.add(new Label((solvedByLayout.getComponentCount() + 1) + ". " + message));
     }
 
     private IntegerField getPyramidBlock(int currentRow, int currentColumn) {

@@ -5,4 +5,5 @@ import de.tobiasgaenzler.mathpyramid.app.mathpyramid.application.MathPyramidView
 public interface MultiplayerView {
     void refreshView(MathPyramidViewModel model);
     void updatePyramidBlock(int currentRow, int currentColumn, boolean blockSolved);
+    void addSolvedMessage(String message);
 }

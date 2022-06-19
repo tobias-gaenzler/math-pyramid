@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Theme(value = Lumo.class)
 // Global styles apply only to elements which are not located in shadow dom
 @CssImport("./styles/shared-styles.css")
+@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @Push
 @UIScope
 @PreserveOnRefresh

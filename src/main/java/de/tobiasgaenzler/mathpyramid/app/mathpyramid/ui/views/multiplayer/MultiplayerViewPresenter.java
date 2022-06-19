@@ -70,7 +70,7 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
                 view.refreshView(model);
             } else {
                 if (model.getMultiplayerGame() && model.isMultiplayerGameInProgress()) {
-                    notificationService.createNotification(((String) message)).open();
+                    view.addSolvedMessage((String) message);
                 }
             }
         });

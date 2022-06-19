@@ -58,6 +58,7 @@ public class MathPyramidLayout extends VerticalLayout {
         IntegerField pyramidBlock = new IntegerField();
         pyramidBlock.setValueChangeMode(ValueChangeMode.LAZY);
         pyramidBlock.setValueChangeTimeout(300);
+        pyramidBlock.addClassName("pyramid-block");
         pyramidBlocks.add(pyramidBlock);
         return pyramidBlock;
     }

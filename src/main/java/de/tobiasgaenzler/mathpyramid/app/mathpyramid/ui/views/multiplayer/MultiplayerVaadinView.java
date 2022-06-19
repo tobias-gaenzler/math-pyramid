@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 @UIScope
 @Route(value = "multiplayer", layout = MainLayout.class)
-// use this view as default view ("/"), set this as content in MainLayout
 // Local styles for text fields (can style shadow dom, parts, ...)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @PageTitle("Math-Pyramid")

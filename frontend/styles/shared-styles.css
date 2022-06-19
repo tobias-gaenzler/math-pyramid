@@ -19,3 +19,7 @@
     margin: 2em 0 2em 0;
 }
 
+:host(.user-name) [part="input-field"] {
+    width: 100%;
+}
+

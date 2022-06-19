@@ -2,7 +2,7 @@
    Visit https://vaadin.com/docs/flow/theme/theming-overview.html and
    https://vaadin.com/themes/lumo for more information.
 */
-[part="input-field"] {
+:host(.pyramid-block) [part="input-field"] {
     border: 1px solid grey;
 	margin: 5px;
 	color: grey;
@@ -16,15 +16,15 @@
 }
 
 /* remove dashed border */
-[part="input-field"]::after {
+:host(.pyramid-block) [part="input-field"]::after {
     border-color: transparent !important;
 }
 /* center numbers in field */
-[part="value"] {
+:host(.pyramid-block) [part="value"] {
     text-align: center;
 }
 /* darker background color for readonly fields */
-:host([readonly]) [part="input-field"] {
+:host([readonly].pyramid-block) [part="input-field"] {
     color: grey;
     cursor: default;
     background-color: lightgrey;

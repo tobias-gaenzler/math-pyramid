@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.openqa.selenium.Keys.ENTER;
 
 // run headless in CI environment.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -55,6 +56,27 @@ class IntegrationTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vaadin-notification-card")));
     }
+
+    @Test
+    void testNameCanBeChanged(@Arguments("--headless") ChromeDriver driver) {
+        driver.get("http://localhost:" + randomApplicationPort + "/practice");
+        waitForApplicationAvailable(driver);
+
+        WebElement nameButton = driver.findElement(By.id("name-button"));
+        nameButton.click();
+
+        // check if name change form is present
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("change-name-form")));
+
+        // change name
+        WebElement nameField = driver.findElement(By.className("user-name"));
+        nameField.sendKeys("Tobias");
+        nameField.sendKeys(ENTER);
+
+        wait.until(ExpectedConditions.textToBePresentInElement(nameButton, "Tobias"));
+    }
+
 
     private void fillFieldIfEmpty(WebElement field, String value) {
         if (field.getAttribute("value").isEmpty()) {

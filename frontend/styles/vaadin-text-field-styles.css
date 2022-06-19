@@ -30,7 +30,7 @@
     background-color: lightgrey;
 }
 /* green for solved fields */
-:host(.correct) [part="input-field"] {
+:host([readonly].correct.correct) [part="input-field"] {
     background-color: lightgreen;
 }
 /* pink for incorrect fields */

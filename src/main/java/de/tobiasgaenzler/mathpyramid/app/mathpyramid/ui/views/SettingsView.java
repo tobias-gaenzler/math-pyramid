@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.UIScope;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.configuration.MathPyramidConfiguration;
 import de.tobiasgaenzler.mathpyramid.app.mathpyramid.ui.layouts.MainLayout;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 
 @Route(value = "settings", layout = MainLayout.class)
 @PageTitle("Math Pyramid - Settings")
+@UIScope
 @Component
 public class SettingsView extends VerticalLayout {
     private final Logger logger = LoggerFactory.getLogger(SettingsView.class);

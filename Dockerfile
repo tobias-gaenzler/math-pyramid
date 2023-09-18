@@ -6,12 +6,17 @@ COPY . .
 # TODO: install chrome driver to run integration tests
 RUN mvn -B clean package -DskipTests
 
+
 FROM openjdk:18-slim
 
-RUN useradd docker_user
-USER docker_user
+RUN addgroup --system --gid 1001 appuser
+RUN adduser --system --uid  1001 --group appuser
+RUN mkdir -p /usr/src/app
+RUN chown -R appuser:appuser /usr/src/app
 
+USER appuser
 WORKDIR /usr/src/app
+
 COPY --from=build /usr/src/app/target/*.jar ./application.jar
 EXPOSE 8080
 

@@ -196,7 +196,7 @@
                     </to>
                     <container>
                         <appRoot>/app</appRoot>
-                        <ports>80</ports>
+                        <ports>8080</ports>
                     </container>
                 </configuration>
             </plugin>

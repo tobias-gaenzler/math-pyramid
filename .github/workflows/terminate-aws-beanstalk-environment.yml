@@ -25,7 +25,7 @@ jobs:
 
     - name: Create EB environment and deploy
       run: |
-        eb init math-pyramid --profile eb-cli --region eu-central-1 --platform "arn:aws:elasticbeanstalk:eu-central-1::platform/Corretto 17 running on 64bit Amazon Linux 2023"
-        eb terminate -force math-pyramid
+        eb init math-pyramid --region eu-central-1 --platform "corretto-17"
+        eb terminate math-pyramid --force --all
 
 

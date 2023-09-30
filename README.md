@@ -1,21 +1,16 @@
-# math-pyramid
+# Math Pyramid
 Vaadin app for math pyramid, a math exercise to train basic addition/subtraction skills.
+![Math Pyramid](https://github.com/tobias-gaenzler/math-pyramid/blob/main/src/main/resources/images/help_start.jpg?raw=true)
 
-# Deploy to AWS Elastic Beanstalk (in progress)
-See https://exampledriven.wordpress.com/2017/01/09/spring-boot-aws-elastic-beanstalk-example/
-- install elastic beanstalk cli
-- eb create -s math-pyramid -> create environment without load balancer
-- somehow set server port to 5000 (todo)
-- eb deploy
-- eb terminate --force math-pyramid
+## Technical Information
+The application is implemented with spring boot, Vaadin and websockets (for multiplayer).
 
 
+### CI/CD: GitHub Actions
 
-Use maven plugin: Beanstalk Maven Plugin – Beanstalker Maven Plugin - Usage ?
+Currently, three workflows are implemented:
+- Build and push docker image to dockerhub (on push/merge): The application is continuously build and a docker image is pushed to [dockerhub](https://hub.docker.com/r/tobiasgaenzler/math-pyramid).
+- Build and deploy to AWS Elastic Beanstalk (on demand only)
+- Terminate AWS Elastic Beanstalk environment (on demand only)
 
-
-
-We are terminating the environment instead of pausing it (cleaner)
-Add pause: https://jun711.github.io/aws/how-to-pause-or-stop-elastic-beanstalk-environment-from-running/
-eb scale 0 math-pyramid
 

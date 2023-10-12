@@ -43,10 +43,12 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
     public void register(UI ui, MultiplayerView multiplayerView) {
         view = multiplayerView;
         unregister(ui);
+        logger.info("Registering UI {}, ", ui.getUIId());
         broadcaster.register(ui, this::broadcastListener);
     }
 
     public void unregister(UI ui) {
+        logger.info("Unregistering UI {}, ", ui.getUIId());
         broadcaster.unregister(ui);
     }
 
@@ -64,7 +66,12 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
     }
 
     public void pyramidBlockChanged(int currentRow, int currentColumn, Integer inputValue) {
-        logger.debug("Received input row {}, column {}: inputValue {}, player {}, model {}", currentRow, currentColumn, inputValue, userService.getUserName(), model);
+        logger.info("Received input for block row {}, column {}: inputValue {}, player {}, model {}",
+                currentRow,
+                currentColumn,
+                inputValue,
+                userService.getUserName(),
+                model);
         // store user input in model
         model.setUserInput(currentRow, currentColumn, inputValue);
         view.updatePyramidBlock(currentRow, currentColumn, model.isUserInputCorrect(currentRow, currentColumn));
@@ -75,18 +82,22 @@ public class MultiplayerViewPresenter implements MultiplayerViewListener {
 
     private void broadcastListener(UI ui, Object message) {
         ui.access(() -> {
-            logger.debug("Received broadcast message: {} for player: {}, UI: {}",
+            logger.info("Received broadcast message: {} for player: {}, UI: {}",
                     message,
                     userService.getUserName(),
                     ui
             );
             if (message instanceof MathPyramidViewModel) {
+                logger.info("Received new model for player {}, starting game", userService.getUserName());
                 model = new MathPyramidViewModel(((MathPyramidViewModel) message));
                 view.refreshView(model);
                 timerService.startGame();
             } else {
                 if (model.isMultiplayerGameInProgress()) {
                     view.addSolvedMessage((String) message);
+                    logger.info("Received message, that game is solved (user: {})", userService.getUserName());
+                } else {
+                    logger.info("Ignoring message as no game is in progress (user: {})", userService.getUserName());
                 }
             }
         });

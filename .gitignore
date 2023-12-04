@@ -60,3 +60,11 @@ build/
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.yml
+
+# CDK
+/cdk/.classpath.txt
+/cdk/.vscode
+
+# CDK asset staging directory
+/cdk/.cdk.staging/
+/cdk/cdk.out/

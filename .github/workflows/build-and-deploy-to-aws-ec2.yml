@@ -25,19 +25,16 @@ jobs:
       - name: Build with Maven
         run: MAVEN_OPTS='-Dorg.slf4j.simpleLogger.defaultLogLevel=warn' mvn -B clean install
 
-      #    - name: cdk bootstrap
-      #      uses: parameswaranvv/aws-java-cdk-github-actions@v1
-      #      with:
-      #        cdk_subcommand: 'bootstrap'
-      #        actions_comment: false
-      #        working_dir: 'cdk'
-      #        debug_log: true
-      #      env:
-      #        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      #        CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
-      #        CDK_DEFAULT_REGION: ${{ secrets.CDK_DEFAULT_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Upload jar to S3
+        run: |
+          aws s3 cp target/math-pyramid*.jar s3://math-pyramid/math-pyramid.jar
 
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -48,12 +45,6 @@ jobs:
         run: |
           npm install -g aws-cdk
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@master
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Bootstrap
         run: |
@@ -71,5 +62,3 @@ jobs:
           pwd
           cd cdk
           cdk deploy --require-approval=never
-#    - name: Destroy stack
-#      run: cdk destroy --app="python3 ${PWD}/cdk/my_service/app.py" --force

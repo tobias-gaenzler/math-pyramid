@@ -1,6 +1,5 @@
 package de.tobiasgaenzler.mathpyramid;
 
-import org.jetbrains.annotations.NotNull;
 import software.amazon.awscdk.CfnOutput;
 import software.amazon.awscdk.CfnOutputProps;
 import software.amazon.awscdk.Stack;
@@ -11,8 +10,6 @@ import software.amazon.awscdk.services.iam.Role;
 import software.amazon.awscdk.services.iam.RoleProps;
 import software.amazon.awscdk.services.iam.ServicePrincipal;
 import software.constructs.Construct;
-
-import java.util.List;
 
 // run "cdk bootstrap (if CDKToolkit is not already present)", "cdk synth", "cdk deploy"
 // This stack expects the following resources to exist:
@@ -29,14 +26,6 @@ public class MathPyramidStack extends Stack {
 
     public MathPyramidStack(final Construct scope, final String id, final StackProps props) {
         super(scope, id, props);
-        // Creating a new Vpc takes a lot of time ... hence, we use the default Vpc instead
-        //        Vpc vpc = new Vpc(this, "math-pyramid-vpc",
-        //                VpcProps.builder()
-        //                        .vpcName("MatchPyramidVpc")
-        //                        .ipAddresses(IpAddresses.cidr("10.0.0.0/27"))
-        //                        .maxAzs(1)
-        //                        .build()
-        //        );
 
         IVpc vpc = Vpc.fromLookup(this, "vpc-8a5d84e0", VpcLookupOptions.builder().isDefault(true).build());
         Role ec2Role = new Role(this, "math-pyramid-ec2-role", RoleProps.builder().assumedBy(new ServicePrincipal("ec2.amazonaws.com")).build());
@@ -88,10 +77,5 @@ public class MathPyramidStack extends Stack {
                         .value(ec2Instance.getInstancePublicIp())
                         .build());
 
-    }
-
-    @Override
-    public @NotNull List<String> getAvailabilityZones() {
-        return List.of("eu-central-1a");
     }
 }

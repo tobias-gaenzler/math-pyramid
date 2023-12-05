@@ -1,0 +1,45 @@
+name: Terminate aws EC2 deployment
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
+      CDK_DEFAULT_REGION: ${{ secrets.CDK_DEFAULT_REGION }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 1.17
+        uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 17
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install CDK
+        run: |
+          npm install -g aws-cdk
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Destroy
+        run: |
+          pwd
+          cd cdk
+          cdk destroy --require-approval=never

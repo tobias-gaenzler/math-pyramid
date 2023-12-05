@@ -46,6 +46,7 @@ jobs:
 
       - name: Install CDK
         run: |
+          cd cdk
           npm install -g aws-cdk
 
       - name: Configure AWS credentials

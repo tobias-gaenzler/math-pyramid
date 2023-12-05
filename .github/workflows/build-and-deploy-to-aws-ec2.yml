@@ -1,4 +1,4 @@
-name: Build and deploy to beanstalk
+name: Build and deploy to EC2
 
 on: workflow_dispatch
 

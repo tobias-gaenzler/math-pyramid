@@ -38,6 +38,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
+      - name: Delete jar in S3
+        run: |
+          aws s3 rm s3://math-pyramid/math-pyramid.jar
+
       - name: Destroy
         run: |
           pwd

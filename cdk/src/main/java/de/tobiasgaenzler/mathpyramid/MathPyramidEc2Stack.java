@@ -19,12 +19,12 @@ import software.constructs.Construct;
 // aws cloudformation delete-stack --stack-name CDKToolkit
 //        aws s3 ls | grep cdktoolkit # copy the name
 //        aws s3 rb --force s3://cdktoolkit-stagingbucket-abcdef # replace the name here
-public class MathPyramidStack extends Stack {
-    public MathPyramidStack(final Construct scope, final String id) {
+public class MathPyramidEc2Stack extends Stack {
+    public MathPyramidEc2Stack(final Construct scope, final String id) {
         this(scope, id, null);
     }
 
-    public MathPyramidStack(final Construct scope, final String id, final StackProps props) {
+    public MathPyramidEc2Stack(final Construct scope, final String id, final StackProps props) {
         super(scope, id, props);
 
         IVpc vpc = Vpc.fromLookup(this, "vpc-8a5d84e0", VpcLookupOptions.builder().isDefault(true).build());

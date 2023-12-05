@@ -15,6 +15,13 @@ public class MathPyramidApp {
                         .build())
                 .build());
 
+        new MathPyramidFargateStack(app, "math-pyramid-fargate", StackProps.builder()
+                .env(Environment.builder()
+                        .account(System.getenv("CDK_DEFAULT_ACCOUNT"))
+                        .region(System.getenv("CDK_DEFAULT_REGION"))
+                        .build())
+                .build());
+
         app.synth();
     }
 }

@@ -8,7 +8,7 @@ public class MathPyramidApp {
     public static void main(final String[] args) {
         App app = new App();
 
-        new MathPyramidStack(app, "math-pyramid", StackProps.builder()
+        new MathPyramidStack(app, "math-pyramid-ec2", StackProps.builder()
                 .env(Environment.builder()
                         .account(System.getenv("CDK_DEFAULT_ACCOUNT"))
                         .region(System.getenv("CDK_DEFAULT_REGION"))

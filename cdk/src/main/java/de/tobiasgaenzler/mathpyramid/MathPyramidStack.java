@@ -30,11 +30,11 @@ public class MathPyramidStack extends Stack {
         IVpc vpc = Vpc.fromLookup(this, "vpc-8a5d84e0", VpcLookupOptions.builder().isDefault(true).build());
         Role ec2Role = new Role(this, "math-pyramid-ec2-role", RoleProps.builder().assumedBy(new ServicePrincipal("ec2.amazonaws.com")).build());
         ec2Role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AmazonS3ReadOnlyAccess"));
-        SecurityGroup securityGroup = new SecurityGroup(this, "math-pyramid-sg",
+        SecurityGroup securityGroup = new SecurityGroup(this, "math-pyramid-ec2-sg",
                 SecurityGroupProps.builder()
                         .vpc(vpc)
                         .allowAllOutbound(true)
-                        .securityGroupName("math-pyramid-sg")
+                        .securityGroupName("math-pyramid-ec2-sg")
                         .build());
 
         // Enable if you want to access the instance via SSH
@@ -72,9 +72,11 @@ public class MathPyramidStack extends Stack {
                         .keyName(ec2KeyPair.getKeyName())
                         .build());
 
-        new CfnOutput(this, "math-pyramid-output",
+        new CfnOutput(this, "math-pyramid-ec2-output",
                 CfnOutputProps.builder()
+                        .value("http://")
                         .value(ec2Instance.getInstancePublicIp())
+                        .value(":5000")
                         .build());
 
     }

@@ -11,6 +11,7 @@ jobs:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
       CDK_DEFAULT_REGION: ${{ secrets.CDK_DEFAULT_REGION }}
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -24,36 +25,41 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean install
 
-    - name: cdk bootstrap
-      uses: parameswaranvv/aws-java-cdk-github-actions@v1
-      with:
-        cdk_subcommand: 'bootstrap'
-        actions_comment: false
-        working_dir: 'cdk'
-        debug_log: true
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-        CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
-        CDK_DEFAULT_REGION: ${{ secrets.CDK_DEFAULT_REGION }}
+#    - name: cdk bootstrap
+#      uses: parameswaranvv/aws-java-cdk-github-actions@v1
+#      with:
+#        cdk_subcommand: 'bootstrap'
+#        actions_comment: false
+#        working_dir: 'cdk'
+#        debug_log: true
+#      env:
+#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+#        CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
+#        CDK_DEFAULT_REGION: ${{ secrets.CDK_DEFAULT_REGION }}
 
-#    - name: Set up Node
-#      uses: actions/setup-node@v3
-#      with:
-#        node-version: "16"
-#
-#    - name: Install CDK
-#      run: |
-#        npm install -g aws-cdk
-#
-#    - name: Configure AWS credentials
-#      uses: aws-actions/configure-aws-credentials@master
-#      with:
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-#    - name: Deploy to AWS
-#      run: cdk deploy --app="python3 ${PWD}/cdk/my_service/app.py" --require-approval=never
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: "16"
+
+    - name: Install CDK
+      run: |
+        npm install -g aws-cdk
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@master
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+    - name: Bootstrap
+      run: cdk bootstrap --require-approval=never
+    - name: Synth
+      run: cdk synth --require-approval=never
+    - name: Deploy
+      run: cdk deploy --require-approval=never
 #    - name: Destroy stack
 #      run: cdk destroy --app="python3 ${PWD}/cdk/my_service/app.py" --force

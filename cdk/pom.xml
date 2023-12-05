@@ -30,7 +30,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>de.tobiasgaenzler.mathpyramid.MathPyramidEc2App</mainClass>
+                    <mainClass>de.tobiasgaenzler.mathpyramid.MathPyramidApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

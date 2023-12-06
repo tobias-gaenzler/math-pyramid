@@ -1,4 +1,4 @@
-name: Terminate aws EC2 deployment
+name: Cleanup aws EC2 deployment
 
 on: workflow_dispatch
 
@@ -44,6 +44,5 @@ jobs:
 
       - name: Destroy
         run: |
-          pwd
           cd cdk
           cdk destroy math-pyramid-ec2 --force

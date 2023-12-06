@@ -1,4 +1,4 @@
-name: Terminate aws beanstalk environment
+name: Cleanup aws beanstalk deployment
 
 on: workflow_dispatch
 

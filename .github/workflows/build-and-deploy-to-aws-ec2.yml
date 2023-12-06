@@ -47,9 +47,8 @@ jobs:
 
       - name: Bootstrap
         run: |
-          pwd
           cd cdk
-          cdk bootstrap math-pyramid-ec2  --require-approval=never
+          cdk bootstrap --require-approval=never
 
       - name: Deploy
         run: |

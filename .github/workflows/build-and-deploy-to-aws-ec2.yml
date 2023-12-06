@@ -45,18 +45,12 @@ jobs:
         run: |
           npm install -g aws-cdk
 
-
       - name: Bootstrap
         run: |
           pwd
           cd cdk
           cdk bootstrap math-pyramid-ec2  --require-approval=never
 
-      - name: Synth
-        run: |
-          pwd
-          cd cdk
-          cdk synth math-pyramid-ec2  --require-approval=never
       - name: Deploy
         run: |
           pwd

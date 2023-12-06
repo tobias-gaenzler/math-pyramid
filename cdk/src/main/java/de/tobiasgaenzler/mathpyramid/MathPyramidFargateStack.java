@@ -109,7 +109,7 @@ public class MathPyramidFargateStack extends Stack {
                                         .build()))
                         .build());
 
-        FargateService fargateService = new FargateService(this, "math-pyramid-fargate-service",
+        new FargateService(this, "math-pyramid-fargate-service",
                 FargateServiceProps.builder()
                         .serviceName("math-pyramid-fargate-service")
                         .desiredCount(1)

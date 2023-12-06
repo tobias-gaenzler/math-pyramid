@@ -1,7 +1,5 @@
 package de.tobiasgaenzler.mathpyramid;
 
-import software.amazon.awscdk.CfnOutput;
-import software.amazon.awscdk.CfnOutputProps;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.ec2.*;
@@ -18,10 +16,9 @@ import java.util.List;
 
 // Creates the fargate infrastructure, but does not run a task!
 
-// run "cdk bootstrap (if CDKToolkit is not already present)", "cdk synth", "cdk deploy"
+// run "cdk bootstrap" and then "cdk deploy"
 // This stack expects the following resources to exist:
 // - the current docker image found in tobiasgaenzler/math-pyramid on dockerhub
-// use e.g. "Build and push docker image to dockerhub" workflow to update image
 
 // Cleanup: cdk destroy AND remove the CDKToolkit stack (if desired)
 // aws cloudformation delete-stack --stack-name CDKToolkit
@@ -119,14 +116,5 @@ public class MathPyramidFargateStack extends Stack {
                         .assignPublicIp(true)
                         .taskDefinition(taskDefinition)
                         .build());
-
-        new CfnOutput(this, "math-pyramid-fargate-output",
-                CfnOutputProps.builder()
-                        .value("TODO: find IP address, via aws ecs list-tasks --cluster fargate-cluster --service fargate-service")
-                        .value("TODO: aws ecs describe-tasks --cluster fargate-cluster --tasks arn:aws:ecs:us-east-1:123456789012:task/service/EXAMPLE")
-                        .value("TODO: aws ec2 describe-network-interfaces --network-interface-id  eni-0fa40520aeEXAMPLE")
-                        .build());
-
-
     }
 }

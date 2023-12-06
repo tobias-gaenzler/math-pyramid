@@ -21,6 +21,7 @@ import java.util.List;
 // run "cdk bootstrap (if CDKToolkit is not already present)", "cdk synth", "cdk deploy"
 // This stack expects the following resources to exist:
 // - the current docker image found in tobiasgaenzler/math-pyramid on dockerhub
+// use e.g. "Build and push docker image to dockerhub" workflow to update image
 
 // Cleanup: cdk destroy AND remove the CDKToolkit stack (if desired)
 // aws cloudformation delete-stack --stack-name CDKToolkit

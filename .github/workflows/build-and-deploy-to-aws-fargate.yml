@@ -47,18 +47,18 @@ jobs:
         run: |
           npm install -g aws-cdk
 
-      - name: Bootstrap
-        run: |
-          cd cdk
-          cdk bootstrap --require-approval=never
-
-      - name: Deploy
-        run: |
-          cd cdk
-          cdk deploy math-pyramid-fargate  --require-approval=never
+#      - name: Bootstrap
+#        run: |
+#          cd cdk
+#          cdk bootstrap --require-approval=never
+#
+#      - name: Deploy
+#        run: |
+#          cd cdk
+#          cdk deploy math-pyramid-fargate  --require-approval=never
 
       - name: Get IP of service
         run: |
-          aws ecs list-tasks --cluster math-pyramid-fargate-cluster --service math-pyramid-fargate-service
-#          aws ecs describe-tasks --cluster math-pyramid-fargate-cluster --tasks arn:aws:ecs:us-east-1:123456789012:task/service/EXAMPLE
-#          aws ec2 describe-network-interfaces --network-interface-id eni-0fa40520aeEXAMPLE
+          TASK_ARN="`aws ecs list-tasks --cluster math-pyramid-fargate --service math-pyramid-fargate-service| jq -r '.taskArns[]'`"
+          INTERFACE_ID="`aws ecs describe-tasks --cluster math-pyramid-fargate --tasks ${TASK_ARN}| jq -r '.tasks[].attachments[].details[]| select(.name=="networkInterfaceId") |.value'`"
+          aws ec2 describe-network-interfaces --network-interface-id ${INTERFACE_ID} | jq -r '.NetworkInterfaces[].Association.PublicIp'

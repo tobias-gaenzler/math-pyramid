@@ -69,7 +69,7 @@ build/
 /cdk/.cdk.staging/
 /cdk/cdk.out/
 
-**/.terraform/*
+terraform/aws/.terraform/*
 
 # .tfstate files
 *.tfstate
